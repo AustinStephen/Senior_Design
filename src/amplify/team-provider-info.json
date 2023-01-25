@@ -1,0 +1,15 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-peakprocessing-dev-202959-authRole",
+      "UnauthRoleArn": "arn:aws:iam::004652016190:role/amplify-peakprocessing-dev-202959-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::004652016190:role/amplify-peakprocessing-dev-202959-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-peakprocessing-dev-202959-deployment",
+      "UnauthRoleName": "amplify-peakprocessing-dev-202959-unauthRole",
+      "StackName": "amplify-peakprocessing-dev-202959",
+      "StackId": "arn:aws:cloudformation:us-east-1:004652016190:stack/amplify-peakprocessing-dev-202959/8c158f10-9c60-11ed-a9cc-0ab52ff4aab3",
+      "AmplifyAppId": "d2pr9vfn2vnfra"
+    }
+  }
+}
