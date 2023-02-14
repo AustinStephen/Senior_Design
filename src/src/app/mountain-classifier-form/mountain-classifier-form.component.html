@@ -1,0 +1,38 @@
+<div class="container-fluid" style="width: 50%">
+  <mat-accordion>
+    <mat-expansion-panel
+      (opened)="panelOpenState = true"
+      (closed)="panelOpenState = false"
+    >
+      <mat-expansion-panel-header>
+        <mat-panel-title>How to use our Application</mat-panel-title>
+      </mat-expansion-panel-header>
+      <div>
+        <ol>
+          <li>Click the Predict Image Button below</li>
+          <li>Upload the image of the mountain you want identified</li>
+          <li>
+            Select a geographic point on the map where you think you were when
+            you took the photo
+          </li>
+          <li>
+            Click the "Process Photo" Button to have our application predict
+            which mountain you took a photo of
+          </li>
+        </ol>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+<br />
+
+<div class="container-fluid">
+  <div class="row justify-content-center">
+    <!--Grid column-->
+    <div class="col-xl-5">
+      <div class="" id="map" style="height: 60vh; width: 100%"></div>
+      <button (click)="collectCoordinates()">Collect Coordinates</button>
+    </div>
+    <!--Grid column-->
+  </div>
+</div>

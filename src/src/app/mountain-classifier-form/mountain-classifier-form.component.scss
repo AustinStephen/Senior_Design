@@ -1,0 +1,31 @@
+.crop-container {
+  position: relative;
+  width: 500px;
+  height: 500px;
+  overflow: hidden;
+}
+
+.crop-area {
+  position: absolute;
+  width: 128px;
+  height: 128px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-64px, -64px);
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.drag-handle {
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #fff;
+  position: absolute;
+  bottom: -5px;
+  right: -5px;
+  cursor: move;
+}
+
+img {
+  width: 100%;
+}
