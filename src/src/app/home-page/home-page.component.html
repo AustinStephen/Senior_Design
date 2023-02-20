@@ -1,0 +1,53 @@
+<br />
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-2"></div>
+    <div class="col-8">
+      <ngb-carousel *ngIf="images" [showNavigationArrows]="false">
+        <ng-template ngbSlide>
+          <div class="picsum-img-wrapper">
+            <div class="text-center">
+              <img src="/assets/grandtetonssnow.jpg" />
+            </div>
+          </div>
+          <div class="carousel-caption">
+            <h3>Grand Teton</h3>
+            <p>
+              This mountain range is located near Jackson, Wyoming and is
+              famously known by the world for skiing
+            </p>
+          </div>
+        </ng-template>
+        <ng-template ngbSlide>
+          <div class="picsum-img-wrapper">
+            <div class="text-center">
+              <img src="/assets/Med_Bow_Peak.jpg" />
+            </div>
+          </div>
+          <div class="carousel-caption">
+            <h3>Medicine Bow Peak</h3>
+            <p>This famous peak is located near Carbon County, Wyoming</p>
+          </div>
+        </ng-template>
+        <ng-template ngbSlide>
+          <div class="picsum-img-wrapper">
+            <div class="text-center">
+              <img src="/assets/gannett_peak.jpeg" alt="Random first slide" />
+            </div>
+          </div>
+          <div class="carousel-caption">
+            <h3>Gannett Peak</h3>
+            <p>
+              This famous peak is located near Pinedale, Wyoming and is the
+              highest point of elevation in the state
+            </p>
+          </div>
+        </ng-template>
+      </ngb-carousel>
+    </div>
+    <div class="col-2"></div>
+  </div>
+</div>
+<br />
+
+<app-mountain-classifier-form></app-mountain-classifier-form>
