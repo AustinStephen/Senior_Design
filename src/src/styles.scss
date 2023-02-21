@@ -1,7 +1,19 @@
-/* You can add global styles to this file, and also import other style files */
+@use 'sass:map';
+@use 'sass:color';
+@import '~@angular/material/theming';
+@include mat-core();
+@import 'theme.scss';
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.color-theme {
+  @include angular-material-theme($color-theme);
+}
+
+.carousel-caption {
+  background-color: color.adjust(map.get(map.get($color-theme, 'primary'), 500), $alpha: -0.5);
+}
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';

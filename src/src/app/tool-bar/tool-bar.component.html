@@ -1,15 +1,15 @@
-<div>
+<div class="color-theme">
   <mat-toolbar color="primary">
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>menu</mat-icon>
     </button>
-    <mat-menu #menu="matMenu">
+    <mat-menu class="color-theme" #menu="matMenu">
       <button mat-menu-item [routerLink]="['/']">
-        <mat-icon>home</mat-icon>
+        <mat-icon color="primary">home</mat-icon>
         <span>Home</span>
       </button>
       <button mat-menu-item [routerLink]="['/about-us']">
-        <mat-icon>person</mat-icon>
+        <mat-icon color="primary">person</mat-icon>
         <span>About Us</span>
       </button>
     </mat-menu>
