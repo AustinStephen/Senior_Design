@@ -14,13 +14,13 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .web-toolbar {
   background-color: map.get(map.get($color-theme, 'primary'), 500);
   color: map.get(map.get(map.get($color-theme, 'primary'), 'contrast'), 500);
-  font-size: 20px;
+  font: 500 20px / 32px Roboto, "Helvetica Neue", sans-serif;
 }
 
 .web-toolbar mat-grid-tile button {
   background-color: map.get(map.get($color-theme, 'primary'), 500);
   color: map.get(map.get(map.get($color-theme, 'primary'), 'contrast'), 500);
-  font-size: 20px;
+  font: 500 20px / 32px Roboto, "Helvetica Neue", sans-serif;
   border: 0px;
   width: 100%;
   padding-top: 100%;

@@ -10,12 +10,12 @@ export class ToolBarComponent implements OnInit {
 
   constructor()
   {
-    const mql = window.matchMedia('(max-width: 550px)');
+    const mql = window.matchMedia('(max-width: 554px)');
     this.isMobileView = mql.matches;
   }
 
   ngOnInit(): void 
   {
-    window.onresize = () => this.isMobileView = window.innerWidth <= 550;
+    window.onresize = () => this.isMobileView = window.innerWidth <= 554;
   }
 }
