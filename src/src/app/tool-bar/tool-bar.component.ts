@@ -6,7 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./tool-bar.component.scss'],
 })
 export class ToolBarComponent implements OnInit {
-  constructor() {}
+  isMobileView: boolean;
 
-  ngOnInit(): void {}
+  constructor()
+  {
+    const mql = window.matchMedia('(max-width: 550px)');
+    this.isMobileView = mql.matches;
+  }
+
+  ngOnInit(): void 
+  {
+    window.onresize = () => this.isMobileView = window.innerWidth <= 550;
+  }
 }

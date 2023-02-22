@@ -11,6 +11,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   @include angular-material-theme($color-theme);
 }
 
+.web-toolbar {
+  background-color: map.get(map.get($color-theme, 'primary'), 500);
+  color: map.get(map.get(map.get($color-theme, 'primary'), 'contrast'), 500);
+  font-size: 20px;
+}
+
+.web-toolbar mat-grid-tile button {
+  background-color: map.get(map.get($color-theme, 'primary'), 500);
+  color: map.get(map.get(map.get($color-theme, 'primary'), 'contrast'), 500);
+  font-size: 20px;
+  border: 0px;
+  width: 100%;
+  padding-top: 100%;
+  padding-bottom: 100%;
+}
+
+.web-toolbar mat-grid-tile button:hover {
+  background-color: map.get(map.get($color-theme, 'primary'), 900);
+  color: map.get(map.get(map.get($color-theme, 'primary'), 'contrast'), 900);
+}
+
+
 .carousel-caption {
   background-color: color.adjust(map.get(map.get($color-theme, 'primary'), 500), $alpha: -0.5);
 }
