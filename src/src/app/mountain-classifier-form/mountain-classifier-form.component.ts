@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import * as L from 'leaflet';
+import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { ImageService } from './image-service.service';
 
 @Component({
@@ -12,10 +12,14 @@ import { ImageService } from './image-service.service';
 export class MountainClassifierFormComponent implements OnInit {
   private map: L.Map | null;
   private marker: L.Marker | null;
-  private imageData: ImageData | null;
-  private resizedImageData: ImageData | null;
   public imageUrl: string = '';
   panelOpenState = true;
+
+  // Image Variables
+  selectedFile: File | null;
+  imageChangedEvent: any = '';
+  transform: ImageTransform = {};
+  rgbaArray: Array<Array<number>> | null;
 
   @ViewChild('image') imageElement: ElementRef | undefined;
   @ViewChild('cropArea') cropAreaElement: ElementRef | undefined;
@@ -23,8 +27,10 @@ export class MountainClassifierFormComponent implements OnInit {
   constructor(private http: HttpClient, private imageService: ImageService) {
     this.map = null;
     this.marker = null;
-    this.imageData = null;
-    this.resizedImageData = null;
+    this.selectedFile = null;
+    this.rgbaArray = null;
+    // this.imageData = null;
+    // this.resizedImageData = null;
   }
 
   ngOnInit(): void {
@@ -100,31 +106,24 @@ export class MountainClassifierFormComponent implements OnInit {
   }
 
   onFileSelected(event: Event) {
-    if (!event.target) {
-      console.log('There is not a target');
-      return;
-    }
-    const target = event.target as HTMLInputElement;
-    if (!target.files) {
-      console.log('There is no file list.');
+    // Get the input element and collect the files that are associated with it
+    const inputElement = event.currentTarget as HTMLInputElement;
+    let fileList: FileList | null = inputElement.files;
+    if (!fileList?.length) {
+      console.log('No file seleeted');
       return;
     }
 
-    const file = target.files[0];
-    this.imageService
-      .getImageData(file)
-      .then((imageData) => {
-        this.imageData = imageData;
-        this.imageUrl = URL.createObjectURL(file);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    // Construct a FileArray Object and set our selected file instance
+    const fileArray: Array<File> = Array.from(fileList);
+    this.selectedFile = fileArray[0];
+
+    //Set the image changed event
+    this.imageChangedEvent = event;
   }
 
-  submitForm(form: NgForm) {
-    // const image = this.imageElement.nativeElement as HTMLImageElement;
-    // const cropArea = this.cropAreaElement.nativeElement as HTMLDivElement;
-    // const canvas = document.createElement('canvas');
+  async onImageCropped(event: ImageCroppedEvent) {
+    this.rgbaArray = await this.imageService.getImageData(event);
+    console.log(this.rgbaArray);
   }
 }

@@ -23,14 +23,29 @@
       </div>
     </mat-expansion-panel>
   </mat-accordion>
-</div>
-<br />
+  <br />
 
-<div class="container-fluid">
+  <div class="row justify-content-center">
+    <input type="file" (change)="onFileSelected($event)" accept="image/*" />
+    <image-cropper
+      [imageChangedEvent]="imageChangedEvent"
+      [maintainAspectRatio]="false"
+      [aspectRatio]="1"
+      [resizeToWidth]="700"
+      [cropperMinWidth]="100"
+      [cropperMinHeight]="100"
+      [canvasRotation]="0"
+      [style.display]="true"
+      [transform]="transform"
+      (imageCropped)="onImageCropped($event)"
+    >
+    </image-cropper>
+  </div>
+
   <div class="row justify-content-center">
     <!--Grid column-->
     <div class="col-xl-5">
-      <div class="" id="map" style="height: 60vh; width: 100%"></div>
+      <div class="" id="map" style="height: 60vh"></div>
       <button (click)="collectCoordinates()">Collect Coordinates</button>
     </div>
     <!--Grid column-->
