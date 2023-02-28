@@ -1,0 +1,71 @@
+@use '@angular/material' as mat;
+
+// Primary
+$slate-blue-palette: (
+ 50: #e5f2f6,
+ 100: #c0ddec,
+ 200: #9cc9df,
+ 300: #7db4d2,
+ 400: #67a4ca,
+ 500: #5596c2,
+ 600: #4a89b6,
+ 700: #3f78a5,
+ 800: #376893,
+ 900: #294c73,
+
+ contrast: (
+   50: rgba(black, 0.87),
+   100: rgba(black, 0.87),
+   200: rgba(black, 0.87),
+   300: white,
+   400: white,
+   500: white,
+   600: white,
+   700: white,
+   800: white,
+   900: white
+ )
+);
+
+// Complementary
+$coffee-palette: (
+ 50: rgb(249, 233, 210),
+ 100: rgb(226, 201, 177),
+ 200: rgb(193, 165, 138),
+ 300: rgb(161, 130, 99),
+ 400: rgb(139, 105, 70),
+ 500: rgb(116, 82, 42),
+ 600: rgb(103, 70, 34),
+ 700: rgb(90, 59, 27),
+ 800: rgb(77, 46, 20),
+ 900: rgb(63, 33, 8),
+
+ contrast: (
+   50: rgba(black, 0.87),
+   100: rgba(black, 0.87),
+   200: rgba(black, 0.87),
+   300: white,
+   400: white,
+   500: white,
+   600: white,
+   700: white,
+   800: white,
+   900: white
+ )
+);
+
+// define-palette accepts a color palette, and optionally a "default" 
+// hue, a "lighter" hue, a "darker" hue, and a "text" hue
+$color-theme-primary: mat.define-palette($slate-blue-palette);
+$color-theme-accent: mat.define-palette($coffee-palette);
+$color-theme-warn: mat.define-palette(mat.$red-palette);
+
+$color-theme: mat.define-light-theme((
+ color: (
+   primary: $color-theme-primary,
+   accent: $color-theme-accent,
+   warn: $color-theme-warn
+ ),
+ typography: mat.define-typography-config(),
+ density: 0,
+));
