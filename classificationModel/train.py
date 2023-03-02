@@ -58,12 +58,13 @@ valDS = valDS.cache().prefetch(buffer_size=AUTOTUNE)
 model = tf.keras.Sequential([
   tf.keras.layers.Rescaling(1.0/255),
   tf.keras.layers.RandomContrast(0.2, seed = 23),
-  # tf.keras.layers.RandomBrightness(0.01, seed = 23),
+  tf.keras.layers.RandomBrightness(0.01, seed = 23),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Conv2D(64, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Conv2D(32, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
+  tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Flatten(),
@@ -76,7 +77,7 @@ model.compile(
   metrics=['accuracy'])
 
 # train model
-history = model.fit(trainDS, validation_data=valDS, epochs=30)
+history = model.fit(trainDS, validation_data=valDS, epochs=50)
 #plot history
 plotTraining(history)
 
@@ -92,4 +93,4 @@ print(history.history.keys())
 
 
 # save
-# model.save("savedModels/model_V0.1")
+model.save("savedModels/model_V1.0")
