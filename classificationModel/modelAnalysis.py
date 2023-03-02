@@ -36,3 +36,15 @@ def printData(DS):
   for image_batch, labels_batch in DS:
     print("image batch shape: ", image_batch.shape)
     print("label batch shape: ", labels_batch.shape)
+
+def showImages(DS):
+  class_names = DS.class_names
+
+  plt.figure(figsize=(10, 10))
+  for images, labels in DS.take(1):
+      for i in range(16):
+          ax = plt.subplot(4, 4, i + 1)
+          plt.imshow(images[i].numpy().astype("uint8"))
+          plt.title(class_names[labels[i]])
+          plt.axis("off")
+  plt.show()

@@ -3,18 +3,18 @@
 # Purpose: Process the images of mountain data for the classfier to be trained
 #          and validated with.
 
-import numpy as np
 import tensorflow as tf
-from tensorflow import keras
 from os import listdir
-import numpy as np
-import matplotlib.pyplot as plt
+from modelAnalysis import printData, plotTraining, showImages
+# import tensorflow_datasets as tfds
 
 # Set the hyper parameters
-batchSize = 64
+batchSize = 32
 imgHeight = 128
-imgWidth = 128
-num_classes = 2
+imgWidth = 250
+num_classes = 3
+
+# 260 by 128 to minimize distortion 
 
 # read in the training data
 trainDS = tf.keras.utils.image_dataset_from_directory(
@@ -23,7 +23,8 @@ trainDS = tf.keras.utils.image_dataset_from_directory(
   subset="training",
   seed=123,
   image_size=(imgHeight, imgWidth),
-  batch_size=batchSize)
+  batch_size=batchSize,
+  color_mode='rgb')
 
 # create validation data
 valDS = tf.keras.utils.image_dataset_from_directory(
@@ -32,32 +33,40 @@ valDS = tf.keras.utils.image_dataset_from_directory(
   subset="validation",
   seed=123,
   image_size=(imgHeight, imgWidth),
-  batch_size=batchSize)
+  batch_size=batchSize,
+  color_mode='rgb')
 
-# Check you got the correct classes
-class_names = trainDS.class_names
-print(class_names)
+def random_invert_img(x, p=0.5):
+  if  tf.random.uniform([]) < p:
+    x = (255-x)
+  else:
+    x
+  return x
 
-# check train data dimensions 
-for image_batch, labels_batch in trainDS:
-  print(image_batch.shape)
-  print(labels_batch.shape)
+# print the structure of the data 
+printData(trainDS)
+printData(valDS)
 
-# check test data dimensions
-for image_batch, labels_batch in valDS:
-  print(image_batch.shape)
-  print(labels_batch.shape)
+# showImages(trainDS)
 
+# perfromance 
+AUTOTUNE = tf.data.AUTOTUNE
+trainDS = trainDS.cache().prefetch(buffer_size=AUTOTUNE)
+valDS = valDS.cache().prefetch(buffer_size=AUTOTUNE)
+
+# model with feature augemntation 
 model = tf.keras.Sequential([
-  tf.keras.layers.Rescaling(1./255),
+  tf.keras.layers.Rescaling(1.0/255),
+  tf.keras.layers.RandomContrast(0.2, seed = 23),
+  # tf.keras.layers.RandomBrightness(0.01, seed = 23),
+  tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Conv2D(64, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
   tf.keras.layers.Conv2D(32, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(32, 3, activation='relu'),
-  tf.keras.layers.MaxPooling2D(),
+  tf.keras.layers.Dense(128, activation='relu'),
+  tf.keras.layers.Dense(128, activation='relu'),
   tf.keras.layers.Flatten(),
-  tf.keras.layers.Dense(264, activation='relu'),
   tf.keras.layers.Dense(num_classes)
 ])
 
@@ -66,36 +75,21 @@ model.compile(
   loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
   metrics=['accuracy'])
 
-history = model.fit(
-  trainDS,
-  validation_data=valDS,
-  epochs=50
-)
+# train model
+history = model.fit(trainDS, validation_data=valDS, epochs=30)
+#plot history
+plotTraining(history)
+
+# summarise model layers
+model.summary()
 
 # understand model training
 print(history.history.keys())
 
-# summarize history for accuracy
-# plt.plot(history.history['accuracy'])
-# plt.plot(history.history['val_accuracy'])
-# plt.title('model accuracy')
-# plt.ylabel('accuracy')
-# plt.xlabel('epoch')
-# plt.legend(['train', 'test'], loc='upper left')
-# plt.show()
-
-# summarize history for loss
-# plt.plot(history.history['loss'])
-# plt.plot(history.history['val_loss'])
-# plt.title('model loss')
-# plt.ylabel('loss')
-# plt.xlabel('epoch')
-# plt.legend(['train', 'test'], loc='upper left')
-# plt.show()
-
 # # Evaluate the model on the test data
-# test_loss, test_acc = model.evaluate(x_test, y_test)
+# test_loss, test_acc = model.evaluate(valDS, valDS)
 # print("Test accuracy:", test_acc)
 
+
 # save
-model.save("savedModels/model_V0.1")
+# model.save("savedModels/model_V0.1")
