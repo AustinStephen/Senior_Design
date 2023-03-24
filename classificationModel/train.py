@@ -5,8 +5,7 @@
 
 import tensorflow as tf
 from os import listdir
-from modelAnalysis import printData, plotTraining, showImages
-# import tensorflow_datasets as tfds
+from modelAnalysis import printData, plotTraining, showImages, confusionMatrix
 
 # Set the hyper parameters
 batchSize = 32
@@ -57,18 +56,18 @@ valDS = valDS.cache().prefetch(buffer_size=AUTOTUNE)
 # model with feature augemntation 
 model = tf.keras.Sequential([
   tf.keras.layers.Rescaling(1.0/255),
-  tf.keras.layers.RandomContrast(0.2, seed = 23),
-  tf.keras.layers.RandomBrightness(0.01, seed = 23),
-  tf.keras.layers.MaxPooling2D(),
+  tf.keras.layers.RandomContrast(factor = .1, seed = 23),
+  tf.keras.layers.RandomBrightness(factor = (-0.01,0.01), seed = 23),
   tf.keras.layers.Conv2D(64, 3, activation='relu'),
   tf.keras.layers.MaxPooling2D(),
-  tf.keras.layers.Conv2D(32, 3, activation='relu'),
-  tf.keras.layers.MaxPooling2D(),
+  # tf.keras.layers.Conv2D(32, 3, activation='relu'),
+  # tf.keras.layers.MaxPooling2D(),
+  tf.keras.layers.Dense(256, activation='relu'),
   tf.keras.layers.Dense(128, activation='relu'),
-  tf.keras.layers.Dense(128, activation='relu'),
-  tf.keras.layers.Dense(128, activation='relu'),
+  tf.keras.layers.Dense(64, activation='relu'),
   tf.keras.layers.Flatten(),
-  tf.keras.layers.Dense(num_classes)
+  tf.keras.layers.Dense(num_classes),
+  # tf.keras.layers.Softmax()
 ])
 
 model.compile(
@@ -77,20 +76,25 @@ model.compile(
   metrics=['accuracy'])
 
 # train model
-history = model.fit(trainDS, validation_data=valDS, epochs=50)
+history = model.fit(trainDS, validation_data=valDS, epochs=10)
 #plot history
-plotTraining(history)
+# plotTraining(history)
 
 # summarise model layers
 model.summary()
 
+# confusion matrix
+# confusionMatrix(valDS, model)
+probability_model = tf.keras.Sequential([model, 
+                                         tf.keras.layers.Softmax()])
+
+predictions = probability_model.predict(valDS)
+
+# for pred in predictions:
+#   print([ round(elem, 2) for elem in pred ])
+
 # understand model training
 print(history.history.keys())
 
-# # Evaluate the model on the test data
-# test_loss, test_acc = model.evaluate(valDS, valDS)
-# print("Test accuracy:", test_acc)
-
-
 # save
-model.save("savedModels/model_V1.0")
+probability_model.save("savedModels/model_V2.0")

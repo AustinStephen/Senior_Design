@@ -3,6 +3,8 @@
 # Purpose: Augment the mountain images data
 
 import matplotlib.pyplot as plt
+import numpy as np
+from sklearn.metrics import confusion_matrix
   
 def plotTraining(history):
   """Plots the training epocs with loss and accuracy over time.
@@ -48,3 +50,21 @@ def showImages(DS):
           plt.title(class_names[labels[i]])
           plt.axis("off")
   plt.show()
+  
+def confusionMatrix(model, DS):
+  # get the true labels and predicted labels for the validation dataset
+  val_labels = []
+  val_pred_labels = []
+
+  for x, y in DS:
+      val_labels.extend(y)
+      val_pred = model.predict(x)
+      val_pred_labels.extend(np.argmax(val_pred, axis=1))
+
+  # convert the lists to numpy arrays
+  val_labels = np.array(val_labels)
+  val_pred_labels = np.array(val_pred_labels)
+
+  # compute the confusion matrix
+  cm = confusion_matrix(val_labels, val_pred_labels)
+  print(cm)
