@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 import 'blob-polyfill/Blob.js';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 
+import * as tf from '@tensorflow/tfjs';
+
 @Injectable({
   providedIn: 'root',
 })
 export class ImageService {
   constructor() {}
 
-  getImageData(event: ImageCroppedEvent): Promise<Array<Array<number>>> {
-    return new Promise<Array<Array<number>>>((resolve, reject) => {
+  getImageData(event: ImageCroppedEvent): Promise<tf.Tensor3D> {
+    return new Promise<tf.Tensor3D>((resolve, reject) => {
       const canvas = document.createElement('canvas');
       canvas.width = event.width;
       canvas.height = event.height;
@@ -26,7 +28,6 @@ export class ImageService {
         return;
       }
       image.src = imageSrcString;
-      let formattedRBGA_Array: Array<Array<number>> = [[]];
       image.onload = () => {
         context.drawImage(image, 0, 0);
         const imageData = context.getImageData(
@@ -35,18 +36,25 @@ export class ImageService {
           canvas.width,
           canvas.height
         );
-        const RGBA_Array: Uint8ClampedArray = imageData.data;
 
-        for (var i = 0; i < RGBA_Array.length / 4; i++) {
-          let thisPixel: Array<number> = [];
-          for (var j = 0; j < 4; j++) {
-            const iterator = i * 4 + j;
-            thisPixel[j] = RGBA_Array[iterator];
+        // create 3D array for RGB values
+        const rgbArray: number[][][] = [];
+
+        // loop through pixels
+        for (let i = 0; i < imageData.data.length; i += 4) {
+          // get RGB values
+          const r = imageData.data[i];
+          const g = imageData.data[i + 1];
+          const b = imageData.data[i + 2];
+
+          // add to 3D array
+          if (!rgbArray[Math.floor(i / 4)]) {
+            rgbArray[Math.floor(i / 4)] = [];
           }
-          formattedRBGA_Array[i] = thisPixel;
+          rgbArray[Math.floor(i / 4)].push([r, g, b]);
         }
 
-        resolve(formattedRBGA_Array);
+        resolve(tf.tensor3d(rgbArray));
       };
 
       image.onerror = () => {

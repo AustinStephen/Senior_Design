@@ -29,11 +29,13 @@
     <input type="file" (change)="onFileSelected($event)" accept="image/*" />
     <image-cropper
       [imageChangedEvent]="imageChangedEvent"
-      [maintainAspectRatio]="false"
-      [aspectRatio]="1"
-      [resizeToWidth]="700"
-      [cropperMinWidth]="100"
-      [cropperMinHeight]="100"
+      [maintainAspectRatio]="true"
+      [aspectRatio]="2.05"
+      [resizeToWidth]="2048"
+      [cropperMinWidth]="128"
+      [cropperMinHeight]="128"
+      [cropperMaxWidth]="2048"
+      [cropperMaxHeight]="1024"
       [canvasRotation]="0"
       [style.display]="true"
       [transform]="transform"

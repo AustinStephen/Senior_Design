@@ -4,6 +4,9 @@ import * as L from 'leaflet';
 import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
 import { ImageService } from './image-service.service';
 
+import * as tf from '@tensorflow/tfjs';
+
+
 @Component({
   selector: 'app-mountain-classifier-form',
   templateUrl: './mountain-classifier-form.component.html',
@@ -19,7 +22,10 @@ export class MountainClassifierFormComponent implements OnInit {
   selectedFile: File | null;
   imageChangedEvent: any = '';
   transform: ImageTransform = {};
-  rgbaArray: Array<Array<number>> | null;
+  rgbaTensor: tf.Tensor3D | null;
+
+  // Mode Variables
+  model: tf.LayersModel | null = null;
 
   @ViewChild('image') imageElement: ElementRef | undefined;
   @ViewChild('cropArea') cropAreaElement: ElementRef | undefined;
@@ -28,13 +34,23 @@ export class MountainClassifierFormComponent implements OnInit {
     this.map = null;
     this.marker = null;
     this.selectedFile = null;
-    this.rgbaArray = null;
+    this.rgbaTensor = null;
+    tf.loadLayersModel('https://foo.bar/tfjs_artifacts/model.json').then((value: tf.LayersModel) => {
+      this.model = value;
+    });
+
+    if(this.model){
+      // const image =
+      // this.model.predict()
+    }
+    
     // this.imageData = null;
     // this.resizedImageData = null;
   }
 
   ngOnInit(): void {
     this.initMap();
+    // this.model = await tf.loadLayersModel('https://foo.bar/tfjs_artifacts/model.json');
   }
 
   private initMap(): void {
@@ -123,7 +139,7 @@ export class MountainClassifierFormComponent implements OnInit {
   }
 
   async onImageCropped(event: ImageCroppedEvent) {
-    this.rgbaArray = await this.imageService.getImageData(event);
-    console.log(this.rgbaArray);
+    this.rgbaTensor = await this.imageService.getImageData(event);
+    console.log(this.rgbaTensor);
   }
 }
