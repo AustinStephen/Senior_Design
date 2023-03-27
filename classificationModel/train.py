@@ -101,3 +101,5 @@ probability_model = tf.keras.Sequential([model,
 # probability_model.compute_output_shape(input_shape=(None, 128, 250, 3))
 probability_model.build(input_shape = (None, 128, 250, 3))
 probability_model.save("savedModels/model_V2.0")
+
+# tfjs.converters.save_keras_model(probability_model, "../../src/src/assets")
