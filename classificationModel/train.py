@@ -6,6 +6,7 @@
 import tensorflow as tf
 from os import listdir
 from modelAnalysis import printData, plotTraining, showImages, confusionMatrix
+import tensorflowjs as tfjs
 
 # Set the hyper parameters
 batchSize = 32
@@ -88,13 +89,15 @@ model.summary()
 probability_model = tf.keras.Sequential([model, 
                                          tf.keras.layers.Softmax()])
 
-predictions = probability_model.predict(valDS)
+# predictions = probability_model.predict(valDS)
 
 # for pred in predictions:
 #   print([ round(elem, 2) for elem in pred ])
 
 # understand model training
-print(history.history.keys())
+# print(history.history.keys())
 
 # save
+# probability_model.compute_output_shape(input_shape=(None, 128, 250, 3))
+probability_model.build(input_shape = (None, 128, 250, 3))
 probability_model.save("savedModels/model_V2.0")
