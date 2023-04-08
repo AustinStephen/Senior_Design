@@ -21,6 +21,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MountainClassifierFormComponent } from './mountain-classifier-form/mountain-classifier-form.component';
+import { MountainGalleryComponent } from './mountain-gallery/mountain-gallery.component';
+import { HowItWorksComponent } from './how-it-works/how-it-works.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +31,8 @@ import { MountainClassifierFormComponent } from './mountain-classifier-form/moun
     AboutUsComponent,
     ToolBarComponent,
     MountainClassifierFormComponent,
+    MountainGalleryComponent,
+    HowItWorksComponent,
   ],
   imports: [
     BrowserModule,
