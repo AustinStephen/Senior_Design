@@ -21,7 +21,7 @@ def createModel():
                                 600, 700, 800, 1000, 1250, 1500, 2000, 4000, 6000, 8000])
   
   learningRate = random.choice([0.00005, 0.00001, 0.000025, 0.00005, 0.000075, 0.0001, 0.00025, 
-                                  0.00075, 0.001, 0.005])
+                                0.00075, 0.001, 0.005])
         
   # Size of the last dense layer
   denseSizeLast = random.choice([10, 20, 30, 40, 50, 60, 75, 100, 200])
@@ -107,28 +107,31 @@ for paramConfig in range(configs):
 
   # Evaluate model for each fold
   for resamp in range(folds):
+    # time
+    runTime = 0
+    
     # record time for a fold
     start_time = time.time()
     
     # get new train test split
     trainDS, testDS= readData(32, resamp)
     
-    # if first iteration less than 60% accuracy don't continue
-    if resamp == 1 and accumAcc < 0.60:
+    # if first iteration less than 55% accuracy don't continue
+    if resamp == 1 and (accumAcc < 0.50 and runTime < 300) or (accumAcc < 0.55 and runTime > 300):
       print("Stopping resampling after 1 iteration")
       finished = False
       break
-    # if second iteration less than 65% accuracy average don't continue
-    elif resamp == 2 and accumAcc < (0.65 * 2):
+    # if second iteration less than 60% accuracy average don't continue
+    elif resamp == 2 and (accumAcc < (0.55*2) and runTime < 300) or (accumAcc < (0.60*2) and runTime > 300):
       print("Stopping resampling after 2 iterations")
       finished = False
       break
-    # if third iteration less than 70% accuracy average don't continue
-    elif resamp == 3 and accumAcc < (0.70 * 3):
+    # if third iteration less than 65% accuracy average don't continue
+    elif resamp == 3 and (accumAcc < (0.60*3) and runTime < 300) or (accumAcc < (0.65*3) and runTime > 300):
       print("Stopping resampling after 3 iterations")
       finished = False
-    # if by fourth iteration is less than 75% accuracy average don't continue
-    elif resamp == 4 and accumAcc < (0.75 * 4):
+    # if by fourth iteration is less than 65% accuracy average don't continue
+    elif resamp == 4 and accumAcc < (0.65 * 4):
       print("Stopping resampling after 4 iterations")
       finished = False
     else:
