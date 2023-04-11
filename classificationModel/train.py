@@ -29,10 +29,5 @@ def evaluateModel(model, epochs, trainDS, testDS):
 
   model.summary()
 
-  # convert to probability model
-  probability_model = tf.keras.Sequential([model, 
-                                          tf.keras.layers.Softmax()])
-  probability_model.build(input_shape = (None, 128, 250, 3))
-
-  return probability_model, finalAcc
+  return finalAcc
 

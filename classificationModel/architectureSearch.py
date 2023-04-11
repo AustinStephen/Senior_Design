@@ -17,8 +17,8 @@ def createModel():
   # number of dense layers
   denseLayers = random.choice([1, 2, 3, 4, 5])
   # maximum size of the dense layers
-  denseSizeMax = random.choice([100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 
-                                600, 700, 800, 1000, 1250, 1500, 2000, 4000, 6000, 8000])
+  denseSizeMax = random.choice([100, 125, 150, 175, 200, 225, 250, 275, 300, 350, 400, 
+                                450, 500, 550, 600, 700, 800, 1000, 1250, 1500, 2000, 4000, 6000, 8000])
   
   learningRate = random.choice([0.00005, 0.00001, 0.000025, 0.00005, 0.000075, 0.0001, 0.00025, 
                                 0.00075, 0.001, 0.005])
@@ -34,12 +34,13 @@ def createModel():
   randomContrast = random.choice([0.2, 0.1, 0.05])
   randomRot = random.choice([0.05, 0.01, 0])
   dropOutRate = random.choice([0.1, 0.2, 0.3, 0.4, 0.5])
+  batchSize = random.choice([16, 32, 64])
   
   params = {'learningRate': learningRate, 'denseLayers': denseLayers, 
             'denseSizeMax': denseSizeMax, 'denseSizeLast': denseSizeLast, 
             'convolutions': convolutions, 'convolutionSize' : convolutionSize, \
             'randomContrast': randomContrast, 'randomRot': randomRot, 
-            'dropOutRate': dropOutRate}
+            'dropOutRate': dropOutRate, 'batchSize': batchSize}
       
   
   # inital base model
@@ -114,7 +115,7 @@ for paramConfig in range(configs):
     start_time = time.time()
     
     # get new train test split
-    trainDS, testDS= readData(32, resamp)
+    trainDS, testDS= readData(params['batchSize'], resamp)
     
     # if first iteration less than 55% accuracy don't continue
     if resamp == 1 and (accumAcc < 0.50 and runTime < 300) or (accumAcc < 0.55 and runTime > 300):
@@ -137,13 +138,13 @@ for paramConfig in range(configs):
     else:
       # massive models cannot afford to run for longer than 50 epochs
       if params['denseSizeMax'] < 1500:
-        probability_model, perf = evaluateModel(model, 150, trainDS, testDS)
+        perf = evaluateModel(model, 150, trainDS, testDS)
         finished = True
       elif params['denseSizeMax'] < 2000:
-        probability_model, perf = evaluateModel(model, 100, trainDS, testDS)
+        perf = evaluateModel(model, 100, trainDS, testDS)
         finished = True
       else: 
-        probability_model, perf = evaluateModel(model, 50, trainDS, testDS)
+        perf = evaluateModel(model, 50, trainDS, testDS)
         finished = True
     
     end_time = time.time()
@@ -158,7 +159,8 @@ for paramConfig in range(configs):
     params['meanAcc'] = 0
   
     
-  params['time'] = end_time - start_time
+  runTime = end_time - start_time
+  params['time'] = runTime
   results = results.append(params, ignore_index=True)
   print(results)
   
@@ -167,5 +169,3 @@ for paramConfig in range(configs):
   print(results)
   results.to_csv('classificationModel/HPO.csv', index=False)
   
-# save the final model
-# probability_model.save("savedModels/model_V2.0")
