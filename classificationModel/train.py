@@ -13,8 +13,13 @@ def evaluateModel(model, epochs, trainDS, testDS):
   trainDS = trainDS.cache().prefetch(buffer_size=AUTOTUNE)
   testDS = testDS.cache().prefetch(buffer_size=AUTOTUNE)
 
+  # Early stopping with no improvement
+  es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1,
+                                        patience=10, min_delta=.005,
+                                        restore_best_weights = True)
+  
   # train model -use some of the training data as test data
-  history = model.fit(trainDS, validation_data=testDS, epochs=epochs)
+  history = model.fit(trainDS, validation_data=testDS, epochs=epochs, callbacks=[es])
   # evaluate on completely unseen data
   loss, finalAcc  = model.evaluate(testDS, batch_size=32)
 

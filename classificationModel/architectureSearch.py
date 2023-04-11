@@ -7,33 +7,39 @@ import pandas as pd
 from train import evaluateModel
 from readData import readData
 import time
-num_classes = 3
 
+num_classes = 6
 
 # create dense layers
 def createModel():
   # search spaces 
   # learning rate
-  learningRate = random.choice([0.000005, 0.00001, 0.00005, 0.0001, 0.0005])
   # number of dense layers
-  denseLayers = random.choice([1, 2, 3, 4, 5, 6])
+  denseLayers = random.choice([1, 2, 3, 4, 5])
   # maximum size of the dense layers
-  denseSizeMax = random.choice([100, 256, 100, 256, 256*2, 256*4, 256*8, 256*16])
+  denseSizeMax = random.choice([100, 150, 200, 250, 300, 350, 400, 450, 500, 550, 
+                                600, 700, 800, 1000, 1250, 1500, 2000, 4000, 6000, 8000])
+  
+  learningRate = random.choice([0.00005, 0.00001, 0.000025, 0.00005, 0.000075, 0.0001, 0.00025, 
+                                  0.00075, 0.001, 0.005])
+        
   # Size of the last dense layer
-  denseSizeLast = random.choice([30, 30, 50, 50, 100, 200, 300])
+  denseSizeLast = random.choice([10, 20, 30, 40, 50, 60, 75, 100, 200])
   # number of convolutions
-  convolutions = random.choice([1]) #, 2, 3])
+  convolutions = random.choice([1, 1, 1, 2, 2, 3])
 
   # sizes of the convolutions
-  convolutionSize = random.choice([60, 50, 40, 30, 20, 10])
+  convolutionSize = random.choice([70, 60, 50, 40, 30, 20])
   # ammount of random contrast to apply to the images
-  randomContrast = random.choice([0.1, 0.05])
-  randomRot = random.choice([0.15, 0.1, 0.05, 0.01, 0])
+  randomContrast = random.choice([0.2, 0.1, 0.05])
+  randomRot = random.choice([0.05, 0.01, 0])
+  dropOutRate = random.choice([0.1, 0.2, 0.3, 0.4, 0.5])
   
   params = {'learningRate': learningRate, 'denseLayers': denseLayers, 
             'denseSizeMax': denseSizeMax, 'denseSizeLast': denseSizeLast, 
             'convolutions': convolutions, 'convolutionSize' : convolutionSize, \
-            'randomContrast': randomContrast, 'randomRot': randomRot}
+            'randomContrast': randomContrast, 'randomRot': randomRot, 
+            'dropOutRate': dropOutRate}
       
   
   # inital base model
@@ -44,23 +50,28 @@ def createModel():
   
   # add the convolutions
   for i in range(convolutions):
-    print("Adding CV")
-    size = int(convolutionSize / (i+1))
-    print("size, ", size)
+    size = int(convolutionSize / pow(2, i))
     if(convolutionSize > 10):
+      print("Adding CV")
+      print("Size, ", size),    
       model.add(tf.keras.layers.Conv2D(size, 3, activation='relu'))
       model.add(tf.keras.layers.MaxPooling2D())
 
   # Add the dense layers
   for i in range(denseLayers):
     print("Adding Dense")
-    size = int(denseSizeMax / (i+1))
+    size = int(denseSizeMax / pow(2, i))
+    # dense layer if it is smaller than the last normal layer
+    if denseSizeLast > int(size):
+      break
+    # else add the layer
     print("size, ", size)
     model.add(tf.keras.layers.Dense(size, activation='relu'))
-  
-  # add last dense layer if it is smaller than the last normal layer
-  if denseSizeLast < int(denseSizeMax / (denseLayers + 1)):
-    model.add(tf.keras.layers.Dense(denseSizeLast, activation='relu'))
+    model.add(tf.keras.layers.Dropout(dropOutRate, input_shape=(2,)))
+    
+    
+  print("Adding Dense Last Layer", denseSizeLast)
+  model.add(tf.keras.layers.Dense(denseSizeLast, activation='relu'))
   
   # add the final output layers
   model.add(tf.keras.layers.Flatten())
@@ -78,12 +89,14 @@ results = pd.DataFrame({'learningRate': [], 'denseLayers': [],
                         'denseSizeMax' : [], 'denseSizeLast' : [],
                         'convolutions': [], 'convolutionSize' : [],
                         'randomContrast': [], 'randomRot': [], 
-                        'MeanAcc': []})
+                        'meanAcc': [], 'finished': []})
 
 # number of folds to evaluate the configuration under
-folds = 3
+folds = 5
 # numer of configurations to evaluate
 configs = 100
+
+finished = False
 
 for paramConfig in range(configs):
   
@@ -99,18 +112,50 @@ for paramConfig in range(configs):
     
     # get new train test split
     trainDS, testDS= readData(32, resamp)
-    # if small learning rate
-    if params['learningRate'] < 0.00005:
-      probability_model, perf = evaluateModel(model, 50, trainDS, testDS)
+    
+    # if first iteration less than 60% accuracy don't continue
+    if resamp == 1 and accumAcc < 0.60:
+      print("Stopping resampling after 1 iteration")
+      finished = False
+      break
+    # if second iteration less than 65% accuracy average don't continue
+    elif resamp == 2 and accumAcc < (0.65 * 2):
+      print("Stopping resampling after 2 iterations")
+      finished = False
+      break
+    # if third iteration less than 70% accuracy average don't continue
+    elif resamp == 3 and accumAcc < (0.70 * 3):
+      print("Stopping resampling after 3 iterations")
+      finished = False
+    # if by fourth iteration is less than 75% accuracy average don't continue
+    elif resamp == 4 and accumAcc < (0.75 * 4):
+      print("Stopping resampling after 4 iterations")
+      finished = False
     else:
-      probability_model, perf = evaluateModel(model, 25, trainDS, testDS)
+      # massive models cannot afford to run for longer than 50 epochs
+      if params['denseSizeMax'] < 1500:
+        probability_model, perf = evaluateModel(model, 150, trainDS, testDS)
+        finished = True
+      elif params['denseSizeMax'] < 2000:
+        probability_model, perf = evaluateModel(model, 100, trainDS, testDS)
+        finished = True
+      else: 
+        probability_model, perf = evaluateModel(model, 50, trainDS, testDS)
+        finished = True
     
     end_time = time.time()
     accumAcc = accumAcc + perf
+  
+  # record if it finished  
+  params['finished'] = finished
+  # compute the accuracy 
+  if finished:
+    params['meanAcc'] = accumAcc / folds
+  else:
+    params['meanAcc'] = 0
+  
     
-  # add the the results
-  params['MeanAcc'] = accumAcc / folds
-  params['time'] = start_time - end_time
+  params['time'] = end_time - start_time
   results = results.append(params, ignore_index=True)
   print(results)
   
@@ -118,7 +163,6 @@ for paramConfig in range(configs):
   print("The final tunning results are: ")
   print(results)
   results.to_csv('classificationModel/HPO.csv', index=False)
-  
   
 # save the final model
 # probability_model.save("savedModels/model_V2.0")
