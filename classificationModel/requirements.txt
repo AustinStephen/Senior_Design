@@ -1,2 +1,1 @@
-pillow-9.4.0
-numpy-1.24.1s
+tensorflow-macos-2.9.0
