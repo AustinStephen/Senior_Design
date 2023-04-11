@@ -1,4 +1,34 @@
+@use 'sass:map';
+@import '~@angular/material/theming';
+@import '../../theme.scss';
+@include angular-material-theme($color-theme);
+
+.explanation-p {
+  text-align: center;
+  font-size: 16px;
+}
+
+.individual-bio:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  background-color: map.get(map.get($color-theme, 'accent'), 50);
+}
+
+.about-us-name {
+  background-color: map.get(map.get($color-theme, 'accent'), 800);
+  color: map.get(map.get(map.get($color-theme, 'accent'), 'contrast'), 800);
+  border-radius: 25px;
+}
+
+.bio-pic {
+  width: 100%;
+}
+
+.major-header {
+  margin: 0px;
+}
+
 .linkedin-icon {
-  height: 2vh;
-  width: 1vw;
+  height: 2em;
+  width: 2em;
+  margin: 0px;
 }

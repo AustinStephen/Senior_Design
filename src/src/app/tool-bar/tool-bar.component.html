@@ -1,6 +1,6 @@
 <div class="color-theme">
   <div *ngIf="!isMobileView">
-    <mat-grid-list class="web-toolbar" cols="3" rowHeight="56px">
+    <mat-grid-list class="web-toolbar" cols="5" rowHeight="70px">
       <mat-grid-tile>
         <mat-icon>landscape</mat-icon>
         <span>&nbsp; Peak Processing</span>
@@ -13,6 +13,16 @@
       <mat-grid-tile>
         <button [routerLink]="['/about-us']">
           <span>About Us</span>
+        </button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button [routerLink]="['/classifiable-mountains']">
+          <span>Classifiable Mountains</span>
+        </button>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <button [routerLink]="['/how-it-works']">
+          <span>How it Works</span>
         </button>
       </mat-grid-tile>
     </mat-grid-list>
@@ -31,6 +41,14 @@
         <button mat-menu-item [routerLink]="['/about-us']">
           <mat-icon color="primary">person</mat-icon>
           <span>About Us</span>
+        </button>
+        <button mat-menu-item [routerLink]="['/classifiable-mountains']">
+          <mat-icon color="primary">photo_library</mat-icon>
+          <span>Classifiable Mountains</span>
+        </button>
+        <button mat-menu-item [routerLink]="['/how-it-works']">
+          <mat-icon color="primary">assessment</mat-icon>
+          <span>How it Works</span>
         </button>
       </mat-menu>
       <span>Peak Processing</span>
