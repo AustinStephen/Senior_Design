@@ -2,10 +2,16 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
-import { ImageService } from './image-service.service';
+import { TensorService } from './tensor.service';
+
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import * as tf from '@tensorflow/tfjs';
-
+import { Coordinate } from '../interfaces/interfaces';
+import { PostProcessingFormulasService } from './post-processing-formulas.service';
+import { ClassifiableMountains } from '../interfaces/mountains';
+import { MatDialog } from '@angular/material/dialog';
+import { MountainClassifierModalComponent } from '../mountain-classifier-modal/mountain-classifier-modal.component';
 
 @Component({
   selector: 'app-mountain-classifier-form',
@@ -13,44 +19,54 @@ import * as tf from '@tensorflow/tfjs';
   styleUrls: ['./mountain-classifier-form.component.scss'],
 })
 export class MountainClassifierFormComponent implements OnInit {
+  // Map and HTML variables
   private map: L.Map | null;
   private marker: L.Marker | null;
-  public imageUrl: string = '';
   panelOpenState = true;
 
   // Image Variables
   selectedFile: File | null;
   imageChangedEvent: any = '';
   transform: ImageTransform = {};
-  rgbaTensor: tf.Tensor3D | null;
+  rgbTensor: tf.Tensor4D | null;
+  public imageUrl: string = '';
 
   // Mode Variables
-  model: tf.LayersModel | null = null;
+  model: tf.LayersModel | null;
+  geoLocation: Coordinate | null;
+  predictionArray: Uint8Array | Float32Array | Int32Array | null;
+
+  // Form variables
+  mountainClassifierForm: FormGroup;
+  imageUploaded: boolean = false;
 
   @ViewChild('image') imageElement: ElementRef | undefined;
   @ViewChild('cropArea') cropAreaElement: ElementRef | undefined;
 
-  constructor(private http: HttpClient, private imageService: ImageService) {
+  constructor(
+    private imageService: TensorService,
+    private fb: FormBuilder,
+    private ppf: PostProcessingFormulasService,
+    private dialog: MatDialog
+  ) {
     this.map = null;
     this.marker = null;
     this.selectedFile = null;
-    this.rgbaTensor = null;
-    tf.loadLayersModel('https://foo.bar/tfjs_artifacts/model.json').then((value: tf.LayersModel) => {
-      this.model = value;
+    this.rgbTensor = null;
+    this.model = null;
+    this.geoLocation = null;
+    this.model = null;
+    this.predictionArray = null;
+    this.mountainClassifierForm = this.fb.group({
+      photo: [null, Validators.required],
+      location: [null, Validators.required],
+      predictionArray: [null, Validators.required],
     });
-
-    if(this.model){
-      // const image =
-      // this.model.predict()
-    }
-    
-    // this.imageData = null;
-    // this.resizedImageData = null;
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.initMap();
-    // this.model = await tf.loadLayersModel('https://foo.bar/tfjs_artifacts/model.json');
+    this.model = await tf.loadLayersModel('/assets/model-data/model.json');
   }
 
   private initMap(): void {
@@ -97,30 +113,21 @@ export class MountainClassifierFormComponent implements OnInit {
 
     this.map.on('click', (event) => {
       if (this.marker) this.marker.setLatLng(event.latlng);
+      const latLng = this.marker ? this.marker.getLatLng() : null;
+      if (latLng) {
+        this.geoLocation = {
+          Latitude: latLng.lat,
+          Longitude: latLng.lng,
+        };
+
+        this.mountainClassifierForm.patchValue({
+          location: this.geoLocation,
+        });
+      }
     });
   }
 
-  collectCoordinates() {
-    const latLng = this.marker ? this.marker.getLatLng() : null;
-    if (latLng) {
-      const latitude = latLng.lat;
-      const longitude = latLng.lng;
-      this.http
-        .get(
-          `https://nationalmap.gov/epqs/pqs.php?x=${longitude}&y=${latitude}&units=FEET&output=json`
-        )
-        .subscribe((result: any) => {
-          const elevation =
-            result.USGS_Elevation_Point_Query_Service.Elevation_Query.Elevation;
-          // return elevation;
-
-          console.log(
-            `Latitude: ${latitude}, Longitude: ${longitude}, Elevation: ${elevation}`
-          );
-        });
-    }
-  }
-
+  // Image Cropper Functions
   onFileSelected(event: Event) {
     // Get the input element and collect the files that are associated with it
     const inputElement = event.currentTarget as HTMLInputElement;
@@ -134,12 +141,74 @@ export class MountainClassifierFormComponent implements OnInit {
     const fileArray: Array<File> = Array.from(fileList);
     this.selectedFile = fileArray[0];
 
-    //Set the image changed event
+    // Set the image changed event
     this.imageChangedEvent = event;
+    this.imageUploaded = true;
+    this.mountainClassifierForm.patchValue({ photo: this.selectedFile });
   }
 
   async onImageCropped(event: ImageCroppedEvent) {
-    this.rgbaTensor = await this.imageService.getImageData(event);
-    console.log(this.rgbaTensor);
+    this.rgbTensor = await this.imageService.construct4DTensorFromImage(event);
+    const output = this.model?.predict(this.rgbTensor);
+    let outputTensor;
+    if (Array.isArray(output)) {
+      outputTensor = output[0]; // If the output is an array of tensors, use the first tensor
+    } else {
+      outputTensor = output; // If the output is a single tensor, use it directly
+    }
+    if (outputTensor) {
+      this.predictionArray = await outputTensor.data();
+      this.mountainClassifierForm.patchValue({
+        predictionArray: this.predictionArray,
+      });
+    }
+  }
+
+  // Post-processing Functions
+  async processPhoto(): Promise<void> {
+    const photoControl = this.mountainClassifierForm.get('photo');
+    const locationControl = this.mountainClassifierForm.get('location');
+    const predictionArrayControl =
+      this.mountainClassifierForm.get('predictionArray');
+
+    if (!photoControl?.value && !locationControl?.value) {
+      alert(
+        'Please upload a photo to process and select a location on the map.'
+      );
+      return;
+    } else if (!photoControl?.value) {
+      alert('Please upload a photo to process.');
+      return;
+    } else if (!locationControl?.value || !this.geoLocation) {
+      alert('Please select a location on the map.');
+      return;
+    }
+
+    if (!predictionArrayControl?.value || !this.predictionArray) {
+      console.log('Error: No prediction array is avaliable');
+      return;
+    }
+
+    const parametricValues = this.ppf.parametricEvaluationOfAllMountains(
+      this.geoLocation
+    );
+    console.log('Prediction array:' + this.predictionArray);
+    console.log('Parametric Values: ' + parametricValues);
+    const mostLikelyMountainIndex = this.ppf.applyParametricEvaluations(
+      this.predictionArray,
+      parametricValues
+    );
+
+    console.log(
+      `The most likely mountain is: ${ClassifiableMountains[mostLikelyMountainIndex].Name}`
+    );
+
+    await this.OpenModal(mostLikelyMountainIndex);
+  }
+
+  async OpenModal(index: number): Promise<void> {
+    const dialogRef = this.dialog.open(MountainClassifierModalComponent, {
+      data: ClassifiableMountains[index],
+    });
   }
 }
