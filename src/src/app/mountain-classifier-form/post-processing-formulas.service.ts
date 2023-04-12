@@ -55,9 +55,9 @@ export class PostProcessingFormulasService {
         ClassifiableMountains[i].Coordinates,
         photoLocation
       );
-      console.log(
-        `For ${ClassifiableMountains[i].Name} the parametric value is ${paraElavs[i]}`
-      );
+      // console.log(
+      //   `For ${ClassifiableMountains[i].Name} the parametric value is ${paraElavs[i]}`
+      // );
     }
     return paraElavs;
   }
@@ -71,7 +71,7 @@ export class PostProcessingFormulasService {
       newPredicitionArray[i] = predictionArray[i] * (parametricEvals[i] ?? 0);
     }
     // Return the index for the mountain we most likely believe it is
-    console.log('This is the multipled array: ' + newPredicitionArray);
+    // console.log('This is the multipled array: ' + newPredicitionArray);
     return newPredicitionArray.reduce(
       (maxIndex, currentValue, currentIndex, array) => {
         return currentValue > array[maxIndex] ? currentIndex : maxIndex;

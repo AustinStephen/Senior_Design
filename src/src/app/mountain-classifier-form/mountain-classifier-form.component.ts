@@ -192,15 +192,11 @@ export class MountainClassifierFormComponent implements OnInit {
     const parametricValues = this.ppf.parametricEvaluationOfAllMountains(
       this.geoLocation
     );
-    console.log('Prediction array:' + this.predictionArray);
-    console.log('Parametric Values: ' + parametricValues);
+    // console.log('Prediction array:' + this.predictionArray);
+    // console.log('Parametric Values: ' + parametricValues);
     const mostLikelyMountainIndex = this.ppf.applyParametricEvaluations(
       this.predictionArray,
       parametricValues
-    );
-
-    console.log(
-      `The most likely mountain is: ${ClassifiableMountains[mostLikelyMountainIndex].Name}`
     );
 
     await this.OpenModal(mostLikelyMountainIndex);
