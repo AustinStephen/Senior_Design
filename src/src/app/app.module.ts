@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import { ImageCropperModule } from 'ngx-image-cropper';
 
@@ -19,10 +19,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatDialogModule } from '@angular/material/dialog';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { MountainClassifierFormComponent } from './mountain-classifier-form/mountain-classifier-form.component';
 import { MountainGalleryComponent } from './mountain-gallery/mountain-gallery.component';
 import { HowItWorksComponent } from './how-it-works/how-it-works.component';
+import { MountainClassifierModalComponent } from './mountain-classifier-modal/mountain-classifier-modal.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +35,7 @@ import { HowItWorksComponent } from './how-it-works/how-it-works.component';
     MountainClassifierFormComponent,
     MountainGalleryComponent,
     HowItWorksComponent,
+    MountainClassifierModalComponent,
   ],
   imports: [
     BrowserModule,
@@ -46,9 +49,10 @@ import { HowItWorksComponent } from './how-it-works/how-it-works.component';
     MatCardModule,
     MatExpansionModule,
     MatGridListModule,
+    MatDialogModule,
     ImageCropperModule,
     NgbModule,
-    FormsModule,
+    ReactiveFormsModule,
   ],
   providers: [HttpClientModule],
   bootstrap: [AppComponent],

@@ -1,0 +1,15 @@
+<div class="container-fluid">
+  <h1 mat-dialog-title>{{ data.Name }}</h1>
+  <div mat-dialog-content>
+    <div class="col-12 d-flex justify-content-center align-items-center">
+      <img
+        mat-card-image
+        src="{{ data.PhotoSource }}"
+        style="width: 100%; height: auto; max-width: 100%; object-fit: cover"
+      />
+    </div>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button (click)="onNoClick()" cdkFocusInitial>Home</button>
+  </div>
+</div>
