@@ -37,7 +37,7 @@ export class PostProcessingFormulasService {
     return distance;
   }
 
-  parametricFormula(locOfMountain: Coordinate, locOfPhoto: Coordinate): number {
+  sigmoidFunction(locOfMountain: Coordinate, locOfPhoto: Coordinate): number {
     return (
       1.0 /
       (0.84 +
@@ -48,10 +48,10 @@ export class PostProcessingFormulasService {
     );
   }
 
-  parametricEvaluationOfAllMountains(photoLocation: Coordinate): Array<number> {
-    const paraElavs: Array<number> = [];
+  sigmoidEvaluationOfAllMountains(photoLocation: Coordinate): Array<number> {
+    const sigmoidElavs: Array<number> = [];
     for (var i = 0; i < ClassifiableMountains.length; i++) {
-      paraElavs[i] = this.parametricFormula(
+      sigmoidElavs[i] = this.sigmoidFunction(
         ClassifiableMountains[i].Coordinates,
         photoLocation
       );
@@ -59,16 +59,16 @@ export class PostProcessingFormulasService {
       //   `For ${ClassifiableMountains[i].Name} the parametric value is ${paraElavs[i]}`
       // );
     }
-    return paraElavs;
+    return sigmoidElavs;
   }
 
-  applyParametricEvaluations(
+  applySigmoidEvaluations(
     predictionArray: Uint8Array | Float32Array | Int32Array,
-    parametricEvals: Array<number>
+    sigmoidEvals: Array<number>
   ): number {
     const newPredicitionArray: Array<number> = [];
     for (var i = 0; i < predictionArray.length; i++) {
-      newPredicitionArray[i] = predictionArray[i] * (parametricEvals[i] ?? 0);
+      newPredicitionArray[i] = predictionArray[i] * (sigmoidEvals[i] ?? 0);
     }
     // Return the index for the mountain we most likely believe it is
     // console.log('This is the multipled array: ' + newPredicitionArray);

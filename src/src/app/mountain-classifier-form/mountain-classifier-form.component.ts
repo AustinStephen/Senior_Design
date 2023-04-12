@@ -189,12 +189,12 @@ export class MountainClassifierFormComponent implements OnInit {
       return;
     }
 
-    const parametricValues = this.ppf.parametricEvaluationOfAllMountains(
+    const parametricValues = this.ppf.sigmoidEvaluationOfAllMountains(
       this.geoLocation
     );
     // console.log('Prediction array:' + this.predictionArray);
     // console.log('Parametric Values: ' + parametricValues);
-    const mostLikelyMountainIndex = this.ppf.applyParametricEvaluations(
+    const mostLikelyMountainIndex = this.ppf.applySigmoidEvaluations(
       this.predictionArray,
       parametricValues
     );
