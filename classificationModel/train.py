@@ -15,7 +15,7 @@ def evaluateModel(model, epochs, trainDS, testDS):
 
   # Early stopping with no improvement
   es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1,
-                                        patience=10, min_delta=.005,
+                                        patience=10, min_delta=.001,
                                         restore_best_weights = True)
   
   # train model -use some of the training data as test data

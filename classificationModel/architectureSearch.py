@@ -7,15 +7,16 @@ import pandas as pd
 from train import evaluateModel
 from readData import readData
 import time
-
+from numpy.random import seed
 num_classes = 6
+seed(1)
 
 # create dense layers
 def createModel():
   # search spaces 
   # learning rate
   # number of dense layers
-  denseLayers = random.choice([1, 2, 3, 4, 5])
+  denseLayers = random.choice([1, 2, 3])
   # maximum size of the dense layers
   denseSizeMax = random.choice([100, 125, 150, 175, 200, 225, 250, 275, 300, 350, 400, 
                                 450, 500, 550, 600, 700, 800, 1000, 1250, 1500, 2000, 4000, 6000, 8000])
@@ -29,7 +30,8 @@ def createModel():
   convolutions = random.choice([1, 1, 1, 2, 2, 3])
 
   # sizes of the convolutions
-  convolutionSize = random.choice([70, 60, 50, 40, 30, 20])
+  convolutionFilterSize = random.choice([2,3,4,5,6,8,10,12,14,16,18,22])
+  filters = random.choice([3, 6, 12, 24])
   # ammount of random contrast to apply to the images
   randomContrast = random.choice([0.2, 0.1, 0.05])
   randomRot = random.choice([0.05, 0.01, 0])
@@ -38,7 +40,7 @@ def createModel():
   
   params = {'learningRate': learningRate, 'denseLayers': denseLayers, 
             'denseSizeMax': denseSizeMax, 'denseSizeLast': denseSizeLast, 
-            'convolutions': convolutions, 'convolutionSize' : convolutionSize, \
+            'convolutions': convolutions, 'convolutionFilterSize' : convolutionFilterSize, \
             'randomContrast': randomContrast, 'randomRot': randomRot, 
             'dropOutRate': dropOutRate, 'batchSize': batchSize}
       
@@ -51,13 +53,19 @@ def createModel():
   
   # add the convolutions
   for i in range(convolutions):
-    size = int(convolutionSize / pow(2, i))
-    if(convolutionSize > 10):
-      print("Adding CV")
-      print("Size, ", size),    
-      model.add(tf.keras.layers.Conv2D(size, 3, activation='relu'))
+    size = int(convolutionFilterSize/ pow(2, i))
+    
+    if(size > 1):
+      print("Adding CV with filter size ", size, "and filters", filters * (i+1))
+      model.add(tf.keras.layers.Conv2D(kernel_size = size, filters = filters, activation='relu'))
       model.add(tf.keras.layers.MaxPooling2D())
 
+  # Add layer before flatten
+  print("Adding Dense Last Layer", denseSizeLast)
+  model.add(tf.keras.layers.Dense(denseSizeLast, activation='relu'))
+
+  model.add(tf.keras.layers.Flatten())
+  
   # Add the dense layers
   for i in range(denseLayers):
     print("Adding Dense")
@@ -69,13 +77,8 @@ def createModel():
     print("size, ", size)
     model.add(tf.keras.layers.Dense(size, activation='relu'))
     model.add(tf.keras.layers.Dropout(dropOutRate, input_shape=(2,)))
-    
-    
-  print("Adding Dense Last Layer", denseSizeLast)
-  model.add(tf.keras.layers.Dense(denseSizeLast, activation='relu'))
   
-  # add the final output layers
-  model.add(tf.keras.layers.Flatten())
+  # add output layer
   model.add(tf.keras.layers.Dense(num_classes))
   
   # compile the final model
@@ -88,7 +91,7 @@ def createModel():
 
 results = pd.DataFrame({'learningRate': [], 'denseLayers': [], 
                         'denseSizeMax' : [], 'denseSizeLast' : [],
-                        'convolutions': [], 'convolutionSize' : [],
+                        'convolutions': [], 'convolutionFilterSize' : [],
                         'randomContrast': [], 'randomRot': [], 
                         'meanAcc': [], 'finished': []})
 
@@ -108,6 +111,7 @@ for paramConfig in range(configs):
 
   # Evaluate model for each fold
   for resamp in range(folds):
+    print("------- Resamp", resamp, "--------------------")
     # time
     runTime = 0
     
@@ -160,6 +164,7 @@ for paramConfig in range(configs):
   
     
   runTime = end_time - start_time
+  print(runTime)
   params['time'] = runTime
   results = results.append(params, ignore_index=True)
   print(results)
