@@ -26,6 +26,7 @@ import { MountainGalleryComponent } from './mountain-gallery/mountain-gallery.co
 import { HowItWorksComponent } from './how-it-works/how-it-works.component';
 import { MountainClassifierModalComponent } from './mountain-classifier-modal/mountain-classifier-modal.component';
 import { MathjaxModule } from 'mathjax-angular';
+import { MountainCardComponent } from './mountain-card/mountain-card.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { MathjaxModule } from 'mathjax-angular';
     MountainGalleryComponent,
     HowItWorksComponent,
     MountainClassifierModalComponent,
+    MountainCardComponent,
   ],
   imports: [
     BrowserModule,

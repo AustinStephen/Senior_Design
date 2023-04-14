@@ -1,3 +1,66 @@
-// img {
-//   min-width: 100%;
-// }
+// Home page wrapper
+.home-page-wrapper {
+  margin: 1rem auto;
+  padding: 2rem 2rem 2rem; // Updated padding property to add extra bottom padding
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.514), 0 1px 3px rgba(0, 0, 0, 0.377);
+  background-color: #ffffff;
+  width: 98%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+  .home-page-wrapper {
+    width: 90%;
+  }
+  .home-page-wrapper .row > div:first-child {
+    margin-bottom: 4rem;
+  }
+}
+
+// Home page content
+.content-wrapper {
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.12);
+  background-color: #ffffff;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.header-title {
+  font-family: "Arial Black", Gadget, sans-serif;
+  font-size: 2.5rem; // Increase the font size
+  line-height: 1.2; // Adjust the line height
+  color: black;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center; // Center the header in the box
+}
+
+.intro-sentence {
+  font-size: 1.3rem; // Increase the font size of the sentences
+  margin-bottom: 0.5rem;
+}
+
+.intro-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.intro-icon {
+  margin-right: 0.5rem;
+  font-size: 1.5rem; // Adjust the icon size if necessary
+}
+
+/* Optional: Add some responsiveness to the header title */
+@media (max-width: 767px) {
+  .header-title {
+    font-size: 2rem;
+  }
+  .intro-sentence {
+    font-size: 1.1rem;
+  }
+}

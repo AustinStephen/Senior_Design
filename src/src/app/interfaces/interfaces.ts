@@ -5,6 +5,8 @@ export interface Coordinate {
 
 export interface Mountain {
   Name: string;
+  Location: string;
+  Elevation: string;
   PhotoSource: string;
   Coordinates: Coordinate;
 }

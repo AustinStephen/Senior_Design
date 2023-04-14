@@ -1,0 +1,40 @@
+<mat-card class="mountain-card">
+  <mat-card-header>
+    <mat-card-title>{{ mountain.Name }}</mat-card-title>
+  </mat-card-header>
+
+  <img mat-card-image src="{{ mountain.PhotoSource }}" />
+
+  <mat-card-footer>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center align-items-center">
+          <h3>Location:</h3>
+        </div>
+        <div class="col-6 d-flex justify-content-center align-items-center">
+          <h3>Elevation:</h3>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6 d-flex justify-content-center align-items-center">
+          <h3>{{ mountain.Location }}</h3>
+        </div>
+        <div class="col-6 d-flex justify-content-center align-items-center">
+          <h3>{{ mountain.Elevation }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <!-- <div class="details">
+      <div class="location">
+        <h3 class="label">Location:</h3>
+        <h3>{{ mountain.Location }}</h3>
+      </div>
+      <div class="elevation">
+        <h3 class="label">Elevation:</h3>
+        <h3>{{ mountain.Elevation }}</h3>
+      </div>
+    </div> -->
+  </mat-card-footer>
+</mat-card>
