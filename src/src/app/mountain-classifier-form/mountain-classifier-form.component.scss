@@ -1,7 +1,7 @@
-@import "~@angular/material/theming";
-@import "~bootstrap/scss/functions";
-@import "~bootstrap/scss/variables";
-@import "~bootstrap/scss/mixins";
+@import "@angular/material/theming";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
 
 // Define custom colors
 $primary-color: #1976d2;
@@ -111,5 +111,14 @@ $breakpoint-md: 768px;
   }
   .image-cropper-wrapper {
     height: auto;
+  }
+  #map {
+    width: 100vw !important;
+  }
+}
+
+@media (min-width: $breakpoint-md) {
+  #map {
+    width: 66vw;
   }
 }

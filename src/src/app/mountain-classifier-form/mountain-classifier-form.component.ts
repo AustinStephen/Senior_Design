@@ -66,13 +66,15 @@ export class MountainClassifierFormComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     this.initMap();
+    // const modelUrl = '/assets/model-data/model.json';
+    // this.model = await tf.loadLayersModel(tf.io.http(modelUrl));
     this.model = await tf.loadLayersModel('/assets/model-data/model.json');
   }
 
   private initMap(): void {
     this.map = L.map('map', {
       center: [41.311, -105.588], // Latitude and Longitude of Laramie
-      zoom: 13,
+      zoom: 7,
       layers: [
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           attribution:
@@ -150,17 +152,19 @@ export class MountainClassifierFormComponent implements OnInit {
   async onImageCropped(event: ImageCroppedEvent) {
     this.rgbTensor = await this.imageService.construct4DTensorFromImage(event);
     const output = this.model?.predict(this.rgbTensor);
-    let outputTensor;
-    if (Array.isArray(output)) {
-      outputTensor = output[0]; // If the output is an array of tensors, use the first tensor
-    } else {
-      outputTensor = output; // If the output is a single tensor, use it directly
-    }
-    if (outputTensor) {
-      this.predictionArray = await outputTensor.data();
-      this.mountainClassifierForm.patchValue({
-        predictionArray: this.predictionArray,
-      });
+    if (output) {
+      let outputTensor: tf.Tensor<tf.Rank>;
+      if (Array.isArray(output)) {
+        outputTensor = output[0]; // If the output is an array of tensors, use the first tensor
+      } else {
+        outputTensor = output; // If the output is a single tensor, use it directly
+      }
+      if (outputTensor) {
+        this.predictionArray = await outputTensor.data();
+        this.mountainClassifierForm.patchValue({
+          predictionArray: this.predictionArray,
+        });
+      }
     }
   }
 
