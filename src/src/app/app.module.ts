@@ -25,6 +25,7 @@ import { MountainClassifierFormComponent } from './mountain-classifier-form/moun
 import { MountainGalleryComponent } from './mountain-gallery/mountain-gallery.component';
 import { HowItWorksComponent } from './how-it-works/how-it-works.component';
 import { MountainClassifierModalComponent } from './mountain-classifier-modal/mountain-classifier-modal.component';
+import { MathjaxModule } from 'mathjax-angular';
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { MountainClassifierModalComponent } from './mountain-classifier-modal/mo
     ImageCropperModule,
     NgbModule,
     ReactiveFormsModule,
+    MathjaxModule.forRoot(),
   ],
   providers: [HttpClientModule],
   bootstrap: [AppComponent],
