@@ -1,48 +1,113 @@
-<p>How it works works!</p>
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css?family=Kalam">
 
-<!-- Include these to use MathJax to format equations -->
-<!-- <html>
-  <head>
-    <title>MathJax</title>
-    <link rel="icon" href="" type="svg">
+<div class="how-to-page">
+  <br>
+  <h1>How Summit Guide is Able to Classify Mountain Images:</h1>
+  <p class="center">
+    We leverage the location and image to determine the mountain a user is looking at. Both methods independently produce a vector of probabilities and the classification shown to the end user prediction is the class with the highest joint probability over both sources of information. Below describes each methodology in detail.
+  </p>
+  <br>
 
-    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-  </head>
-  <body>
-    Below is the quadratic formula:
-    \[a^2 + b^2 = c^2\]
+  <h3>Location Probability Estimation:</h3>
+  <div>
+    <p>
+      The function A produces a probability estimate based on the feasibility of the mountain being visible from a specific location on earth. Where a distance approaching 0 miles implies a probability approaching 1 and a distance of > 200 miles implies a probability &lt; 0.01.  
+    </p>
+    <p class="center" [mathjax]="sigmoidFunc"></p>
+    <p>
+      The distance from the peak D is calculated using the coordinates and DYLAN FILL. It is difficult to estimate how this performs in practice because the
+    </p>
+  </div>
 
-    Wow, having LaTeX in the browser is cool, but I can't do inline variables. $x = 0$ does not work!
-  </body>
-</html> -->
-<!-- <h1>How Summit Guide is Able to Classify Mountain Images:</h1>
-<p>
-  We leverage the location and image to determine the mountain a user 
-  is looking at. Both methods independently produce a vector of 
-  probabilities and the classification shown to the end user 
-  prediction is the class with the highest joint probability over both 
-  sources of information. Below describes each methodology in detail.
-</p>
+  <br>
+  <h3>Image Probability Estimation:</h3>
+  <div>
+    <p>
+      We use a convolutional neural network to classify which peak the photo is of. For five of the peaks, we collected photos by scraping google images and manually filtering out: photos obscured by objects or people, taken “from the peak” as opposed to “of the peak”, drawings or other artwork of the peak, duplicates, and photos where the peak was not featured prominently.  For Pole Mountain the photos were collected manually on a cell phone camera. The architecture of the neural network was based on AlexNet and ResNet.
+    </p>
 
-<h3>Location Probability Estimation:</h3>
-<p>
-  The function A produces a probability estimate based on the 
-  feasibility of the mountain being visible from a specific location 
-  on earth. Where a distance approaching 0 miles implies a probability 
-  approaching 1 and a distance of > 200 miles implies a probability &lt; 
-  0.01.  
-</p>
-<p>
-  \(a \ne 0\)
-</p> -->
-<!-- <p>
-  $Pr(d) = \frac{1}{0.84 + 1.05^{(d-40)}}
-</p> -->
+    <h4>Managing Data:</h4>
+    <div>
+      <p>
+        Scraping Google Images resulted in 917 images total belonging to 6 different mountains. This limited number of images presents a data scarcity issue with only approximately 160 images per class where over a thousand per class is more desirable for many deep learning tasks. This limited number of images makes our models more prone to overfitting. To address this limitation, we artificially extended the dataset with preprocessing, and maximized usage of the data we had with a resampling scheme. 
+      </p>
+      <p>
+        The preprocessing included applying random contrast and random rotations to every image before training. The amount of random contrast and random rotation was treated as a tuning parameter. We also traded off computation time to maximize the amount of data that could be used both for training and validation. We designed a training scheme where 90 percent of the data was used to train the model and 10 percent was held out as a test set. If the model achieved greater than 50% accuracy on this train test split the process was repeated for a fresh 90/10 split. This process was repeated for 5 iterations with thresholds of 55%, 60% and 65% used to allow continued splitting an retraining. This approach meant the most promising models could be trained on 90% of the data, but the average performance estimates stability is comparable to a 50/50 train test split. The progressive thresholds ensure the additional evaluations are not wasted on models that do not show promise for improvement.
+      </p>
+    </div>
 
-<!-- <p>
+    <br>
+    <h4>Architecture:</h4>
+    <div>
+      <p>
+        The first 6 layers of the network alternate convolutions and max pooling. These layers serve as feature extraction from the raw pixels of the image. Then there is a dense layer, then the weights are flattened to a 1x256 layer and finally output to a 1x6 output layer where each node corresponds to class label. Each of the dense layers are subject to a dropout for regularization. The dropout was particularly important because we  that is not
+      </p>
+      <p>Back and forth between convolutions and max pooling</p>
+      <p>Dropout for normalization</p>
+      <p>Dense layers</p>
+      <p>Output layer</p>
+      <img src="assets/NeuralNetworkDiagram.png"/>
+    </div>
 
-Pr(d)=1/(0.84+〖1.05〗^((d-40)) )
-The distance from the peak D is calculated using the coordinates and DYLAN FILL.
-It is difficult to estimate how this performs in practice because the
+    <br>
+    <h4>Hyperparameter Optimization and Neural Architecture Search:</h4>
+    <div>
+      <p>
+        The training and preprocessing parameters tuned were the batch size, learning rate, amount of random contrast to apply to images, and the amount of random rotation to apply to images. Below is the range searched over and the final configuration:
+      </p>
+      <p>
+        Random Contrast applied to the image before feeding into the network [0-0.25] - 
+        <span class="bold">0.25</span>
+      </p>
+      <p>
+        Random Rotation of the images before feeding into the network [0, 0.1] - 
+        <span class="bold">0</span>
+      </p>
+      <p>
+        A learning rate of [0.0000001, 0.05] - 
+        <span class="bold">0.00001</span>
+      </p>
+      <p>
+        The architecture of the network was jointly tuned with the hyperparameters. Below are the architecture parameters we searched over and the final selection:
+      </p>
+      <p>
+        The number of convolutional layers [1,2,3] – 
+        <span class="bold">3</span>
+      </p>
+      <p>
+        The size of the first filter applied at the first convolution [2x2 – 22x22] – 
+        <span class="bold">11x11</span>
+      </p>
+      <p>
+        The kernels of the convolution [3, 6, 12] -
+        <span class="bold">6</span>
+      </p>
+      <p>
+        The size of the first dense layer [100-1250]
+        <span class="bold">300</span>
+      </p>
+      <p>
+        The drop out rate of the regularization drop out layers [0, 0.5] - 
+        <span class="bold">0.4</span>
+      </p>
+      <p>
+        A total of <span class="bold">60</span> architectures were tested using the procedure described in the 
+        <span class="italic">Data Collection and Augmentation</span> section.
+      </p>
+    </div>
 
-</p> -->
+    <br>
+    <h4>Performance:</h4>
+    <div>
+      <p>Average Accuracy by Mountain</p>
+      <p class="bold">Grand Teton</p>
+      <p class="bold">Medicine Bow Peak</p>
+      <p class="bold">Maroon Peak</p>
+      <p class="bold">Mount Rainer</p>
+      <p class="bold">Pole Mountain</p>
+      <p class="bold">Half Dome Yosemite</p>
+    </div>
+  </div>
+  <br>
+</div>
