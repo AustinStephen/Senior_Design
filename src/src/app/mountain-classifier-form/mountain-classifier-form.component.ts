@@ -68,7 +68,9 @@ export class MountainClassifierFormComponent implements OnInit {
     this.initMap();
     // const modelUrl = '/assets/model-data/model.json';
     // this.model = await tf.loadLayersModel(tf.io.http(modelUrl));
+    console.log("71");
     this.model = await tf.loadLayersModel('/assets/model-data/model.json');
+    console.log("73");
     // this.model = await tf.loadLayersModel('file:://assets/model-data/model.json');
   }
 
