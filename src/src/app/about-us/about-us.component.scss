@@ -17,6 +17,10 @@
   background-color: map.get(map.get($color-theme, 'accent'), 800);
   color: map.get(map.get(map.get($color-theme, 'accent'), 'contrast'), 800);
   border-radius: 25px;
+  font-family: "Kalam";
+  font-size: 30px;
+  padding-top: 10px;
+  padding-bottom: 5px;
 }
 
 .bio-pic {

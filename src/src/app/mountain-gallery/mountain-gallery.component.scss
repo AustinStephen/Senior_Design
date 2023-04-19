@@ -5,26 +5,20 @@
 
 .explanation-p {
   text-align: center;
-  font-size: 16px;
+  font-size: 20px;
 }
 
-.gallery-card {
-  background-color: map.get(map.get($color-theme, "accent"), 50);
-  padding-top: 10px;
-  padding-bottom: 10px;
-}
+// .card-container {
+//   margin: 10px;
+//   padding: 10px;
+// }
 
-.card-container {
-  margin: 10px;
-  padding: 10px;
-}
-
-.card-content {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
+// .card-content {
+//   height: 100%;
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between;
+// }
 
 // /* mountain-gallery.component.scss */
 // @mixin responsive-margin($mobile-margin: 8px, $desktop-margin: 16px) {
