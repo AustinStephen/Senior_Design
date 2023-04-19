@@ -43,7 +43,7 @@ export class PostProcessingFormulasService {
       (0.84 +
         Math.pow(
           1.05,
-          this.calculateLatLongDistance(locOfMountain, locOfPhoto)
+          this.calculateLatLongDistance(locOfMountain, locOfPhoto) - 40
         ))
     );
   }
@@ -55,9 +55,6 @@ export class PostProcessingFormulasService {
         ClassifiableMountains[i].Coordinates,
         photoLocation
       );
-      // console.log(
-      //   `For ${ClassifiableMountains[i].Name} the parametric value is ${paraElavs[i]}`
-      // );
     }
     return sigmoidElavs;
   }
@@ -68,7 +65,7 @@ export class PostProcessingFormulasService {
   ): number {
     const newPredicitionArray: Array<number> = [];
     for (var i = 0; i < predictionArray.length; i++) {
-      newPredicitionArray[i] = predictionArray[i] * (sigmoidEvals[i] ?? 0);
+      newPredicitionArray[i] = predictionArray[i] + (sigmoidEvals[i] ?? 0);
     }
     // Return the index for the mountain we most likely believe it is
     // console.log('This is the multipled array: ' + newPredicitionArray);
