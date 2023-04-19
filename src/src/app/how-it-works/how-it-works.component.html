@@ -3,28 +3,20 @@
 <div class="how-to-page">
   <br />
   <h1>How Summit Guide is Able to Classify Mountain Images:</h1>
-  <p class="center">
-    We leverage the location and image to determine the mountain a user is
-    looking at. Both methods independently produce a vector of probabilities and
-    the classification shown to the end user prediction is the class with the
-    highest joint probability over both sources of information. Below describes
-    each methodology in detail.
+  <p>
+    To predict what mountain you are looking at, we leverage the location and what the mountain "looks like" based on the photo. We evaluate the location and image separately and each produce a probability estimate for each of the potential mountains. The probability estimates for what the mountain "looks like" are produced by a convolutional neural network. The probability estimates for the location are computed by a sigmoid function parameterized by the distance between the photo and the peak. Then the mountain with the highest probability across both measures is displayed to the user. The diagram below shows the flow of information leading to the final prediction. 
   </p>
+  <img src="assets/ProcessFlow.png" />
   <br />
 
   <h3>Location Probability Estimation:</h3>
   <div>
     <p>
-      The function A produces a probability estimate based on the feasibility of
-      the mountain being visible from a specific location on earth. Where a
-      distance approaching 0 miles implies a probability approaching 1 and a
-      distance of > 200 miles implies a probability &lt; 0.01.
+      Function <span class="italic">f(d)</span>, shown below, produces a probability estimate based on the feasibility of the mountain being visible from a given distance. The function belongs to the family of sigmoid functions, which was chosen because, in the limit, it approaches probabilities of 0 and 1. The function coefficients were hand selected to reflect the probabilities associated with average visibility on Earth. Specifically, a distance between the photo and the peak approaching 0 miles implies a probability approaching 1 because the mountain takes up nearly your entire plane of view when you're right next to it. Conversely, since the longest sightline in North America is Mt. Sanford to Denali, 199 miles apart, a distance of > 200 miles implies a probability &lt; 0.01.
     </p>
     <p class="center" [mathjax]="sigmoidFunc"></p>
     <p>
-      The distance from the peak D is calculated using the latitude and
-      longitude coordinates and the Haversine formula. It is difficult to
-      estimate how this performs in practice because the
+      The distance from a peak is calculated using the coordinates of the mountain's peak and the location input by the user. The difference between the distances is calculated using the haversine formula, which considers the curvature of the Earth.
     </p>
   </div>
 
@@ -32,44 +24,19 @@
   <h3>Image Probability Estimation:</h3>
   <div>
     <p>
-      We use a convolutional neural network to classify which peak the photo is
-      of. For five of the peaks, we collected photos by scraping google images
-      and manually filtering out: photos obscured by objects or people, taken
-      “from the peak” as opposed to “of the peak”, drawings or other artwork of
-      the peak, duplicates, and photos where the peak was not featured
-      prominently. For Pole Mountain the photos were collected manually on a
-      cell phone camera. The architecture of the neural network was based on
-      AlexNet and ResNet.
+      We use a convolutional neural network to classify which peak is in the photo. The neural network's architecture is based on best practices, many of which were inspired by resnet and alexnet. The neural network can classify 6 mountains which are shown on the classifiable mountains page.
     </p>
 
-    <h4>Managing Data:</h4>
+    <h4>Data and Overfitting:</h4>
     <div>
       <p>
-        Scraping Google Images resulted in 917 images total belonging to 6
-        different mountains. This limited number of images presents a data
-        scarcity issue with only approximately 160 images per class where over a
-        thousand per class is more desirable for many deep learning tasks. This
-        limited number of images makes our models more prone to overfitting. To
-        address this limitation, we artificially extended the dataset with
-        preprocessing, and maximized usage of the data we had with a resampling
-        scheme.
+        For five of the six mountains, training images were obtained from bulk downloads of Google Images. After scraping the images, we manually filtered out: photos obscured by objects or people, taken "from the peak" instead of "of the peak," drawings or other artwork of the peak, duplicate photos, and photos where the peak was not featured prominently. For Pole Mountain, the photos were collected manually on a cell phone camera. To help prevent the different collection methods from influencing the model, manual cropping and additional high resolution photos were collected of the other mountains were hand collected from the internet. In total, this resulted in 917 images belonging to 6 different mountains.
       </p>
       <p>
-        The preprocessing included applying random contrast and random rotations
-        to every image before training. The amount of random contrast and random
-        rotation was treated as a tuning parameter. We also traded off
-        computation time to maximize the amount of data that could be used both
-        for training and validation. We designed a training scheme where 90
-        percent of the data was used to train the model and 10 percent was held
-        out as a test set. If the model achieved greater than 50% accuracy on
-        this train test split the process was repeated for a fresh 90/10 split.
-        This process was repeated for 5 iterations with thresholds of 55%, 60%
-        and 65% used to allow continued splitting an retraining. This approach
-        meant the most promising models could be trained on 90% of the data, but
-        the average performance estimates stability is comparable to a 50/50
-        train test split. The progressive thresholds ensure the additional
-        evaluations are not wasted on models that do not show promise for
-        improvement.
+        917 images for 6 classes presented a major data scarcity issue for training a convolutional neural network with only approximately 150 images per class because often over a thousand images per class is desirable to train convolutional neural networks for image classification. This limited number of images makes the models substantively more prone to overfitting. To address this limitation, we artificially extended the dataset with preprocessing and maximized the utility of the data with resampling. 
+      </p>
+      <p>
+        To preprocess the images, we applied random contrast to every image before each optimization batch and treated the amount of contrast treated as a tuning parameter. During the architecture search, we also used a custom resampling scheme that trained the same architecture multiple times to maximize the data available for training and the stability of the estimate of generalization error. In this resampling scheme, we used 90 percent of the data to train the model and 10 percent as a test set. If the model achieved greater than 50% accuracy on this training test, split the process was repeated for a new 90/10 split. We repeated this iterative procedure for five iterations with increasing thresholds of 55%, 60%, and 65%. This approach meant every model could be trained on 90% of the data for each evaluation, but the generalization performance estimate exhibited stability comparable to a 50/50 train test split. The progressive thresholds ensure the additional computation was not wasted on architectures with no promise of improvement over architectures found in manual experimentation.
       </p>
     </div>
 
@@ -77,86 +44,62 @@
     <h4>Architecture:</h4>
     <div>
       <p>
-        The first 6 layers of the network alternate convolutions and max
-        pooling. These layers serve as feature extraction from the raw pixels of
-        the image. Then there is a dense layer, then the weights are flattened
-        to a 1x256 layer and finally output to a 1x6 output layer where each
-        node corresponds to class label. Each of the dense layers are subject to
-        a dropout for regularization. The dropout was particularly important
-        because we that is not
+        The first four layers of the network alternate convolutional layers and max pooling. The convolutional layers pass a filter with fixed dimensions over the image with coefficients that are learned during the training process. The pooling layers are a down sampling operation, and max pooling takes the maxim value from each feature map. Together, the convolutions and max pooling extract features from the raw rgb pixel values of the image.
       </p>
-      <p>Back and forth between convolutions and max pooling</p>
-      <p>Dropout for normalization</p>
-      <p>Dense layers</p>
-      <p>Output layer</p>
       <img src="assets/NeuralNetworkDiagram.png" />
+      <br /><br />
+      <p>
+        After the feature extraction, there is a dense layer. Then the network is flattened to a 1x500 layer, followed by two additional dense layers, and finally output to a 1x6 output layer where each node corresponds to a class label. Additionally, the dense layers were all subject to a dropout rate of 45%, which is a procedure that removes the weights attached to 45% of the nodes in the layer and rescales it to produce the same prediction. These dropout layers create a regularization force on the network, preventing singular nodes from causing massive swings in predictive probabilities.
+      </p>
+      <p>
+        After training, to get probability estimates associated with each class, the output of the final layer was passed into a SoftMax function to get values summing to 1. The entire neural network was optimized using the "Adam" optimizer with a loss function of sparse categorical cross-entropy, which is the same as categorical cross entropy but set up for our one-hot encoded labels.
+      </p>
     </div>
 
     <br />
     <h4>Hyperparameter Optimization and Neural Architecture Search:</h4>
     <div>
       <p>
-        The training and preprocessing parameters tuned were the batch size,
-        learning rate, amount of random contrast to apply to images, and the
-        amount of random rotation to apply to images. Below is the range
-        searched over and the final configuration:
+        The hyperparameters tuned were the batch size, learning rate, amount of random contrast, and random rotation applied to images. Below are the ranges of hyperparameters searched over and the final configuration:
       </p>
       <p>
-        Random Contrast applied to the image before feeding into the network
-        [0-0.25] -
+        Random contrast applied to the image before feeding into the network [0-0.3] - 
         <span class="bold">0.25</span>
       </p>
       <p>
-        Random Rotation of the images before feeding into the network [0, 0.1] -
+        Random Rotation of the images before feeding into the network [0, 0.1] - 
         <span class="bold">0</span>
       </p>
       <p>
-        A learning rate of [0.0000001, 0.05] -
-        <span class="bold">0.00001</span>
+        A learning rate of [0.0000001, 0.05] - 
+        <span class="bold">0.0005</span>
       </p>
       <p>
-        The architecture of the network was jointly tuned with the
-        hyperparameters. Below are the architecture parameters we searched over
-        and the final selection:
+        The architecture of the network was jointly tuned with the hyperparameters. Below are the architecture parameters we searched over and the final selection:
       </p>
       <p>
-        The number of convolutional layers [1,2,3] –
-        <span class="bold">3</span>
+        The number of convolutional layers [1,2,3] - 
+        <span class="bold">2</span>
       </p>
       <p>
-        The size of the first filter applied at the first convolution [2x2 –
-        22x22] –
-        <span class="bold">11x11</span>
+        The size of the first filter applied at the first convolution [2x2, 3x3, ..., 22x22] - 
+        <span class="bold">5x5</span>
       </p>
       <p>
-        The kernels of the convolution [3, 6, 12] -
+        The kernels of the first convolution (each sequential kernel is doubled) [3, 6, 12] - 
         <span class="bold">6</span>
       </p>
       <p>
-        The size of the first dense layer [100-1250]
-        <span class="bold">300</span>
+        The size of the first dense layer [100-1250] - 
+        <span class="bold">500</span>
       </p>
       <p>
-        The drop out rate of the regularization drop out layers [0, 0.5] -
-        <span class="bold">0.4</span>
+        The drop-out rate [0, 0.5] - 
+        <span class="bold">0.45</span>
       </p>
       <p>
-        A total of <span class="bold">60</span> architectures were tested using
-        the procedure described in the
-        <span class="italic">Data Collection and Augmentation</span> section.
+        A total of 73 architectures were evaluated using the procedure described in the Data Collection and Augmentation section.
       </p>
-    </div>
-
-    <br />
-    <h4>Performance:</h4>
-    <div>
-      <p>Average Accuracy by Mountain</p>
-      <p class="bold">Grand Teton</p>
-      <p class="bold">Medicine Bow Peak</p>
-      <p class="bold">Maroon Peak</p>
-      <p class="bold">Mount Rainer</p>
-      <p class="bold">Pole Mountain</p>
-      <p class="bold">Half Dome Yosemite</p>
     </div>
   </div>
   <br />

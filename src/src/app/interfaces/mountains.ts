@@ -3,7 +3,7 @@ import { Mountain } from './interfaces';
 const GrandTeton: Mountain = {
   Name: 'Grand Teton',
   PhotoSource: 'assets/gallery-images/Grand_Teton.jpg',
-  Location: 'Teton county, Wyoming, US',
+  Location: 'Teton County, Wyoming, US',
   Elevation: '13,775 ft',
   Coordinates: {
     Latitude: 43.738,
@@ -14,7 +14,7 @@ const GrandTeton: Mountain = {
 const MaroonPeak: Mountain = {
   Name: 'Maroon Peak',
   PhotoSource: 'assets/gallery-images/Maroon_Peak.jpg',
-  Location: 'Gunnison and Pitkin counties, Colorado, US',
+  Location: 'Gunnison and Pitkin Counties, Colorado, US',
   Elevation: '14,163 ft',
   Coordinates: {
     Latitude: 39.071,
@@ -25,7 +25,7 @@ const MaroonPeak: Mountain = {
 const MedicineBowPeak: Mountain = {
   Name: 'Medicine Bow Peak',
   PhotoSource: 'assets/gallery-images/Medicine_Bow_Peak.jpg',
-  Location: 'Albany and Carbon counties, Wyoming, US',
+  Location: 'Albany and Carbon Counties, Wyoming, US',
   Elevation: '12,018 ft',
   Coordinates: {
     Latitude: 41.3605,

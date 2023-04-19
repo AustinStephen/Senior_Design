@@ -4,8 +4,13 @@
 @include angular-material-theme($color-theme);
 
 .how-to-page {
-  margin-left: 2vw;
-  margin-right: 2vw;
+  margin-left: 10vw;
+  margin-right: 10vw;
+}
+
+.how-to-page > h1 {
+  font-family: "Kalam";
+  font-size: 30px;
 }
 
 .how-to-page > div {
@@ -39,6 +44,10 @@
 
 p {
   font-size: 16px;
+}
+
+.how-to-page > img {
+  width: 100%;
 }
 
 .how-to-page > div > div > img {
