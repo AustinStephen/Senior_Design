@@ -9,7 +9,7 @@ export class HowItWorksComponent implements OnInit {
   sigmoidFunc: string;
 
   constructor() {
-    this.sigmoidFunc = '$Pr(d) = \\frac{1}{0.84 + 1.05^{(d-40)}}$';
+    this.sigmoidFunc = '$f(d) = \\frac{1}{0.84 + 1.05^{(d-40)}}$';
   }
 
   ngOnInit(): void {}

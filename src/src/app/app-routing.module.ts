@@ -8,7 +8,7 @@ import { HowItWorksComponent } from './how-it-works/how-it-works.component';
 const routes: Routes = [
   { path: '', component: HomePageComponent },
   { path: 'about-us', component: AboutUsComponent },
-  { path: 'classifiable-mountains', component: MountainGalleryComponent },
+  { path: 'mountain-gallery', component: MountainGalleryComponent },
   { path: 'how-it-works', component: HowItWorksComponent }
 ];
 
