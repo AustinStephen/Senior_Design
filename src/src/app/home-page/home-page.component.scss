@@ -1,3 +1,11 @@
+@use "sass:map";
+@import "~@angular/material/theming";
+@import "../../theme.scss";
+@include angular-material-theme($color-theme);
+
+$custom-primary: map.get(map.get($color-theme, "primary"), 500);
+$custom-accent: map.get(map.get($color-theme, "accent"), 50);
+
 // Home page wrapper
 .home-page-wrapper {
   margin: 1rem auto;
@@ -19,16 +27,25 @@
 }
 
 // Home page content
-.content-wrapper {
+.content-one-wrapper {
   padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.12);
-  background-color: #ffffff;
+  background-color: $custom-accent;
   max-width: 100%;
   box-sizing: border-box;
 }
 
-.header-title {
+.content-two-wrapper {
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.14), 0 2px 4px rgba(0, 0, 0, 0.12);
+  background-color: $custom-primary;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.header-one-title {
   font-family: "Arial Black", Gadget, sans-serif;
   font-size: 2.5rem; // Increase the font size
   line-height: 1.2; // Adjust the line height
@@ -37,6 +54,67 @@
   text-transform: uppercase;
   letter-spacing: 1px;
   text-align: center; // Center the header in the box
+}
+
+.header-two-title {
+  font-family: "Arial Black", Gadget, sans-serif;
+  font-size: 2.5rem; // Increase the font size
+  line-height: 1.2; // Adjust the line height
+  color: black;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center; // Center the header in the box
+  display: inline-block;
+  max-width: 100%;
+  white-space: normal;
+}
+
+p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  width: 45vw;
+}
+
+@media only screen and (max-width: 1140px) {
+  .header-one-title {
+    font-size: 1.8rem;
+  }
+  .header-two-title {
+    font-size: 1.8rem;
+  }
+  p {
+    width: 60vw;
+  }
+}
+
+@media only screen and (max-width: 900px) {
+  .header-one-title {
+    font-size: 1.3rem;
+  }
+  .header-two-title {
+    font-size: 1.3rem;
+  }
+  p {
+    width: 70vw;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .header-one-title {
+    font-size: 1.3rem;
+  }
+  .header-two-title {
+    font-size: 1.3rem;
+  }
+  p {
+    width: 80vw;
+  }
+}
+
+.header-two-title > * {
+  white-space: nowrap;
+  display: inline-block; /* Prevent words from breaking on their own */
 }
 
 .intro-sentence {

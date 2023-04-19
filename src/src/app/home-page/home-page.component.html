@@ -1,38 +1,126 @@
 <div class="home-page-wrapper">
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-6 d-flex justify-content-center align-items-center">
-        <div class="content-wrapper">
-          <h1 class="header-title">Peak Finder AI.</h1>
-          <div class="intro-row">
-            <mat-icon class="intro-icon">landscape</mat-icon>
-            <p class="intro-sentence">
-              Discover the mountain in your photo with AI.
-            </p>
-          </div>
-          <div class="intro-row">
-            <mat-icon class="intro-icon">photo_camera</mat-icon>
-            <p class="intro-sentence">Capture the moment, unveil the peak.</p>
-          </div>
-          <div class="intro-row">
-            <mat-icon class="intro-icon">map</mat-icon>
-            <p class="intro-sentence">
-              Your adventure, identified and remembered.
-            </p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-6 d-flex justify-content-center align-items-center">
+      <div class="col-md-5 d-flex justify-content-center align-items-center">
         <img
           src="../../assets/graphics/home-mountain-graphic.webp"
           class="img-fluid"
           mat-card-image
         />
       </div>
+      <div class="col-md-2"></div>
+      <div class="col-md-5 d-flex justify-content-center align-items-center">
+        <div class="content-one-wrapper">
+          <h1 class="header-one-title">Peak Finder AI.</h1>
+          <div class="intro-row">
+            <mat-icon class="intro-icon">landscape</mat-icon>
+            <p class="intro-sentence">
+              Discover the Mountain in your Photo with AI.
+            </p>
+          </div>
+          <div class="intro-row">
+            <mat-icon class="intro-icon">photo_camera</mat-icon>
+            <p class="intro-sentence">Capture the Moment, Unveil the Peak.</p>
+          </div>
+          <div class="intro-row">
+            <mat-icon class="intro-icon">map</mat-icon>
+            <p class="intro-sentence">
+              Your Adventure, Identified and Remembered.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+
+    <div class="row">
+      <div
+        class="col-md-5 order-md-3 d-flex justify-content-center align-items-center"
+      >
+        <img
+          src="../../assets/graphics/mountain-clipart-transparent-background-2.png"
+          class="img-fluid"
+          mat-card-image
+        />
+      </div>
+      <div class="col-md-2 order-md-2"></div>
+      <div
+        class="col-md-5 order-md-1 d-flex justify-content-center align-items-center"
+      >
+        <div class="content-two-wrapper">
+          <h1 class="header-two-title">Innovatative Solution</h1>
+          <div class="intro-row">
+            <mat-icon class="intro-icon">perm_data_setting</mat-icon>
+            <p class="intro-sentence">27-Million Data Points Utilized</p>
+          </div>
+          <div class="intro-row">
+            <mat-icon class="intro-icon">insert_chart_outlined</mat-icon>
+            <p class="intro-sentence">
+              Collaborative AI Neural Net and Distance Model for Accuracy
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <br />
+
+    <div class="row">
+      <div class="col-12 d-flex justify-content-center align-items-center">
+        <button mat-raised-button color="primary" (click)="scrollToForm()">
+          Go to Application
+        </button>
+      </div>
+    </div>
+
+    <br />
+    <br />
+
+    <div class="row">
+      <div class="col-12 d-flex justify-content-center align-items-center">
+        <h2 class="header-two-title">
+          Introducing Summit Guide by Peak Processing
+        </h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-center align-items-center">
+        <p>
+          Your personal mountain identifier and adventure companion! Imagine
+          embarking on an exhilarating hike through the wilderness, capturing
+          the breathtaking beauty of a towering mountain peak, only to wonder
+          which majestic summit graces your view. Fret no more, as our
+          cutting-edge application seamlessly solves this conundrum for you.
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-center align-items-center">
+        <p>
+          Our revolutionary app harnesses the power of Angular, TensorFlow, and
+          Leaflet to bring you an unparalleled user experience. Snap a photo of
+          any one of six iconic mountains, pinpoint your location on a map, and
+          let Summit Guide work its magic. Watch in awe as our sophisticated
+          Convolutional Neural Network and sigmoid function algorithms combine
+          forces to predict with incredible accuracy the awe-inspiring mountain
+          your lens has captured.
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 d-flex justify-content-center align-items-center">
+        <p>
+          Whether you're a seasoned mountaineer or a casual nature enthusiast,
+          Summit Guide by Peak Processing is the essential tool for any outdoor
+          adventure. Unleash the full potential of your next expedition and
+          never be left guessing again. The mountains are calling, and Summit
+          Guide is here to answer.
+        </p>
+      </div>
     </div>
   </div>
   <br />
-  <div class="container-fluid">
+  <div class="container-fluid" #formStart>
     <app-mountain-classifier-form></app-mountain-classifier-form>
   </div>
 </div>
