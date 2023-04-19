@@ -68,7 +68,7 @@ export class PostProcessingFormulasService {
   ): number {
     const newPredicitionArray: Array<number> = [];
     for (var i = 0; i < predictionArray.length; i++) {
-      newPredicitionArray[i] = predictionArray[i] * (sigmoidEvals[i] ?? 0);
+      newPredicitionArray[i] = predictionArray[i] + (sigmoidEvals[i] ?? 0);
     }
     // Return the index for the mountain we most likely believe it is
     // console.log('This is the multipled array: ' + newPredicitionArray);
