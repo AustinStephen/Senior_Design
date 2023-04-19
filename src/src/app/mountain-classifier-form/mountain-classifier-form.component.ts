@@ -1,4 +1,3 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import * as L from 'leaflet';
 import { ImageCroppedEvent, ImageTransform } from 'ngx-image-cropper';
@@ -23,6 +22,8 @@ export class MountainClassifierFormComponent implements OnInit {
   private map: L.Map | null;
   private marker: L.Marker | null;
   panelOpenState = true;
+  private userLat: number | null = null;
+  private userLong: number | null = null;
 
   // Image Variables
   selectedFile: File | null;
@@ -62,6 +63,10 @@ export class MountainClassifierFormComponent implements OnInit {
       location: [null, Validators.required],
       predictionArray: [null, Validators.required],
     });
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.userLat = position.coords.latitude;
+      this.userLong = position.coords.longitude;
+    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -73,7 +78,7 @@ export class MountainClassifierFormComponent implements OnInit {
 
   private initMap(): void {
     this.map = L.map('map', {
-      center: [41.311, -105.588], // Latitude and Longitude of Laramie
+      center: [this.userLat ?? 41.311, this.userLong ?? -105.588], // Latitude and Longitude of Laramie
       zoom: 7,
       layers: [
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {

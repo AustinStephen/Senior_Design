@@ -1,5 +1,59 @@
 <form [formGroup]="mountainClassifierForm" (ngSubmit)="processPhoto()">
   <div class="container-fluid">
+    <div class="row mt-4 justify-content-center">
+      <div class="col-12 text-center">
+        <div class="upload-image-container">
+          <input
+            class="mx-auto"
+            type="file"
+            id="file-input"
+            (change)="onFileSelected($event)"
+            accept="image/*"
+          />
+          <label for="file-input">Upload or Replace Image to Identify</label>
+        </div>
+      </div>
+      <div class="col-12 d-flex justify-content-center align-items-center">
+        <div class="image-cropper-container">
+          <image-cropper
+            *ngIf="imageChangedEvent"
+            [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true"
+            [aspectRatio]="2.05"
+            [resizeToWidth]="2048"
+            [cropperMinWidth]="250"
+            [cropperMinHeight]="128"
+            [cropperMaxWidth]="2048"
+            [cropperMaxHeight]="1024"
+            [canvasRotation]="0"
+            [style.display]="true"
+            [transform]="transform"
+            (imageCropped)="onImageCropped($event)"
+          ></image-cropper>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12 d-flex justify-content-center align-items-center">
+        <div id="map" style="width: 100vw"></div>
+      </div>
+    </div>
+
+    <div class="row mt-1">
+      <div class="col-12 text-center">
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="mx-auto"
+          [disabled]="!mountainClassifierForm.valid"
+        >
+          Process Photo
+        </button>
+      </div>
+    </div>
+
     <div class="col-12 d-flex justify-content-center align-items-center">
       <mat-accordion>
         <mat-expansion-panel
@@ -24,63 +78,6 @@
           </div>
         </mat-expansion-panel>
       </mat-accordion>
-    </div>
-
-    <div class="row mt-4 justify-content-center">
-      <div class="col-12 text-center">
-        <div class="upload-image-container">
-          <input
-            type="file"
-            id="file-input"
-            (change)="onFileSelected($event)"
-            accept="image/*"
-          />
-          <label for="file-input">Upload or Replace Image</label>
-        </div>
-      </div>
-      <div class="col-12 d-flex justify-content-center align-items-center">
-        <div class="image-cropper-container">
-          <image-cropper
-            *ngIf="imageChangedEvent"
-            [imageChangedEvent]="imageChangedEvent"
-            [maintainAspectRatio]="true"
-            [aspectRatio]="2.05"
-            [resizeToWidth]="2048"
-            [cropperMinWidth]="250"
-            [cropperMinHeight]="128"
-            [cropperMaxWidth]="2048"
-            [cropperMaxHeight]="1024"
-            [canvasRotation]="0"
-            [style.display]="true"
-            [transform]="transform"
-            (imageCropped)="onImageCropped($event)"
-          ></image-cropper>
-          <div *ngIf="!imageChangedEvent" class="image-placeholder-container">
-            <br />
-            <h1>Select an image to begin</h1>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="row">
-      <div class="col-12 d-flex justify-content-center align-items-center">
-        <div id="map" style="width: 100vw"></div>
-      </div>
-    </div>
-
-    <div class="row mt-1">
-      <div class="col-12 text-center">
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          class="mx-auto"
-          [disabled]="!mountainClassifierForm.valid"
-        >
-          Process Photo
-        </button>
-      </div>
     </div>
   </div>
   <br />
