@@ -204,16 +204,6 @@ export class MountainClassifierFormComponent implements OnInit {
       return val / 10.0;
     });
 
-    // parametricValues = parametricValues.map((val) => {
-    //   return val * 10;
-    // });
-
-    // this.predictionArray.forEach((val, index) => {
-    //   console.log(
-    //     `The probability for ${ClassifiableMountains[index].Name} is ${val}`
-    //   );
-    // });
-    // console.log(parametricValues);
     const mostLikelyMountainIndex = this.ppf.applySigmoidEvaluations(
       this.predictionArray,
       parametricValues
