@@ -151,7 +151,7 @@
                     "trainable": true,
                     "batch_input_shape": [null, 2],
                     "dtype": "float32",
-                    "rate": 0.45,
+                    "rate": 0.5,
                     "noise_shape": null,
                     "seed": null
                   }
@@ -171,7 +171,7 @@
                     "name": "dense_1",
                     "trainable": true,
                     "dtype": "float32",
-                    "units": 500,
+                    "units": 65,
                     "activation": "relu",
                     "use_bias": true,
                     "kernel_initializer": {
@@ -193,7 +193,7 @@
                     "trainable": true,
                     "batch_input_shape": [null, 2],
                     "dtype": "float32",
-                    "rate": 0.45,
+                    "rate": 0.5,
                     "noise_shape": null,
                     "seed": null
                   }
@@ -202,72 +202,6 @@
                   "class_name": "Dense",
                   "config": {
                     "name": "dense_2",
-                    "trainable": true,
-                    "dtype": "float32",
-                    "units": 250,
-                    "activation": "relu",
-                    "use_bias": true,
-                    "kernel_initializer": {
-                      "class_name": "GlorotUniform",
-                      "config": { "seed": null }
-                    },
-                    "bias_initializer": { "class_name": "Zeros", "config": {} },
-                    "kernel_regularizer": null,
-                    "bias_regularizer": null,
-                    "activity_regularizer": null,
-                    "kernel_constraint": null,
-                    "bias_constraint": null
-                  }
-                },
-                {
-                  "class_name": "Dropout",
-                  "config": {
-                    "name": "dropout_2",
-                    "trainable": true,
-                    "batch_input_shape": [null, 2],
-                    "dtype": "float32",
-                    "rate": 0.45,
-                    "noise_shape": null,
-                    "seed": null
-                  }
-                },
-                {
-                  "class_name": "Dense",
-                  "config": {
-                    "name": "dense_3",
-                    "trainable": true,
-                    "dtype": "float32",
-                    "units": 65,
-                    "activation": "relu",
-                    "use_bias": true,
-                    "kernel_initializer": {
-                      "class_name": "GlorotUniform",
-                      "config": { "seed": null }
-                    },
-                    "bias_initializer": { "class_name": "Zeros", "config": {} },
-                    "kernel_regularizer": null,
-                    "bias_regularizer": null,
-                    "activity_regularizer": null,
-                    "kernel_constraint": null,
-                    "bias_constraint": null
-                  }
-                },
-                {
-                  "class_name": "Dropout",
-                  "config": {
-                    "name": "dropout_3",
-                    "trainable": true,
-                    "batch_input_shape": [null, 2],
-                    "dtype": "float32",
-                    "rate": 0.45,
-                    "noise_shape": null,
-                    "seed": null
-                  }
-                },
-                {
-                  "class_name": "Dense",
-                  "config": {
-                    "name": "dense_4",
                     "trainable": true,
                     "dtype": "float32",
                     "units": 6,
@@ -304,33 +238,10 @@
   "weightsManifest": [
     {
       "paths": [
-        "group1-shard1of27.bin",
-        "group1-shard2of27.bin",
-        "group1-shard3of27.bin",
-        "group1-shard4of27.bin",
-        "group1-shard5of27.bin",
-        "group1-shard6of27.bin",
-        "group1-shard7of27.bin",
-        "group1-shard8of27.bin",
-        "group1-shard9of27.bin",
-        "group1-shard10of27.bin",
-        "group1-shard11of27.bin",
-        "group1-shard12of27.bin",
-        "group1-shard13of27.bin",
-        "group1-shard14of27.bin",
-        "group1-shard15of27.bin",
-        "group1-shard16of27.bin",
-        "group1-shard17of27.bin",
-        "group1-shard18of27.bin",
-        "group1-shard19of27.bin",
-        "group1-shard20of27.bin",
-        "group1-shard21of27.bin",
-        "group1-shard22of27.bin",
-        "group1-shard23of27.bin",
-        "group1-shard24of27.bin",
-        "group1-shard25of27.bin",
-        "group1-shard26of27.bin",
-        "group1-shard27of27.bin"
+        "group1-shard1of4.bin",
+        "group1-shard2of4.bin",
+        "group1-shard3of4.bin",
+        "group1-shard4of4.bin"
       ],
       "weights": [
         { "name": "conv2d/kernel", "shape": [6, 6, 3, 5], "dtype": "float32" },
@@ -343,14 +254,10 @@
         { "name": "conv2d_1/bias", "shape": [3], "dtype": "float32" },
         { "name": "dense/kernel", "shape": [3, 40], "dtype": "float32" },
         { "name": "dense/bias", "shape": [40], "dtype": "float32" },
-        { "name": "dense_1/kernel", "shape": [55000, 500], "dtype": "float32" },
-        { "name": "dense_1/bias", "shape": [500], "dtype": "float32" },
-        { "name": "dense_2/kernel", "shape": [500, 250], "dtype": "float32" },
-        { "name": "dense_2/bias", "shape": [250], "dtype": "float32" },
-        { "name": "dense_3/kernel", "shape": [250, 65], "dtype": "float32" },
-        { "name": "dense_3/bias", "shape": [65], "dtype": "float32" },
-        { "name": "dense_4/kernel", "shape": [65, 6], "dtype": "float32" },
-        { "name": "dense_4/bias", "shape": [6], "dtype": "float32" }
+        { "name": "dense_1/kernel", "shape": [55000, 65], "dtype": "float32" },
+        { "name": "dense_1/bias", "shape": [65], "dtype": "float32" },
+        { "name": "dense_2/kernel", "shape": [65, 6], "dtype": "float32" },
+        { "name": "dense_2/bias", "shape": [6], "dtype": "float32" }
       ]
     }
   ]
