@@ -193,10 +193,6 @@ export class MountainClassifierFormComponent implements OnInit {
     let parametricValues = this.ppf.sigmoidEvaluationOfAllMountains(
       this.geoLocation
     );
-    // Correct the new weights
-    this.predictionArray = this.predictionArray.map((val) => {
-      return val / 10.0;
-    });
 
     const mostLikelyMountainIndex = this.ppf.applySigmoidEvaluations(
       this.predictionArray,
