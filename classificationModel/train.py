@@ -15,7 +15,7 @@ def evaluateModel(model, epochs, trainDS, testDS):
 
   # Early stopping with no improvement
   es = tf.keras.callbacks.EarlyStopping(monitor='val_loss', mode='min', verbose=1,
-                                        patience=10, min_delta=.005,
+                                        patience=10, min_delta=.001,
                                         restore_best_weights = True)
   
   # train model -use some of the training data as test data
@@ -29,10 +29,5 @@ def evaluateModel(model, epochs, trainDS, testDS):
 
   model.summary()
 
-  # convert to probability model
-  probability_model = tf.keras.Sequential([model, 
-                                          tf.keras.layers.Softmax()])
-  probability_model.build(input_shape = (None, 128, 250, 3))
-
-  return probability_model, finalAcc
+  return finalAcc
 

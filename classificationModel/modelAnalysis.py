@@ -4,7 +4,8 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-# from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix
+
   
 def plotTraining(history):
   """Plots the training epocs with loss and accuracy over time.
