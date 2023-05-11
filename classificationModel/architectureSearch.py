@@ -19,7 +19,7 @@ def createModel():
   denseLayers = random.choice([1, 2, 3])
   # maximum size of the dense layers
   denseSizeMax = random.choice([100, 125, 150, 175, 200, 225, 250, 275, 300, 350, 400, 
-                                450, 500, 550, 600, 700, 800, 1000, 1250, 1500, 2000, 4000, 6000, 8000])
+                                450, 500, 550, 600, 700, 800, 1000, 1250])
   
   learningRate = random.choice([0.00005, 0.00001, 0.000025, 0.00005, 0.000075, 0.0001, 0.00025, 
                                 0.00075, 0.001, 0.005])
@@ -31,7 +31,7 @@ def createModel():
 
   # sizes of the convolutions
   convolutionFilterSize = random.choice([2,3,4,5,6,8,10,12,14,16,18,22])
-  filters = random.choice([3, 6, 12, 24])
+  filters = random.choice([3, 6, 12])
   # ammount of random contrast to apply to the images
   randomContrast = random.choice([0.2, 0.1, 0.05])
   randomRot = random.choice([0.05, 0.01, 0])
